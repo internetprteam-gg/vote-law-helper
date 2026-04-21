@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경기도청 홍보업무 선거법 도우미</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #003087;
+  --blue-mid: #1B5CB8;
+  --blue-light: #E8F0FB;
+  --blue-pale: #F4F7FD;
+  --gray-50: #F8F9FA;
+  --gray-100: #F1F3F5;
+  --gray-200: #E8EAED;
+  --gray-400: #9AA0AA;
+  --gray-600: #5A6070;
+  --gray-900: #1A1D23;
+  --ok: #0D7F4F;
+  --ok-bg: #EBF7F2;
+  --warn: #92600A;
+  --warn-bg: #FFF8E6;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 8px rgba(0,48,135,0.07);
+  --shadow-md: 0 4px 20px rgba(0,48,135,0.11);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--gray-50);color:var(--gray-900);min-height:100vh;}
+
+/* 헤더 */
+header{background:var(--blue);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.header-inner{max-width:1060px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;padding:0 24px;}
+.logo{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+.logo small{opacity:.6;font-weight:400;font-size:12px;margin-left:8px;}
+.header-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:11.5px;font-weight:500;}
+
+/* 컨테이너 */
+.container{max-width:1060px;margin:0 auto;padding:28px 24px;}
+
+/* 히어로 */
+.hero{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-mid) 100%);border-radius:var(--radius);padding:36px 40px;color:#fff;margin-bottom:24px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.04);}
+.hero-tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:4px 12px;font-size:11.5px;font-weight:500;margin-bottom:14px;}
+.hero h1{font-size:24px;font-weight:700;line-height:1.4;margin-bottom:8px;letter-spacing:-.5px;}
+.hero p{font-size:13.5px;opacity:.78;line-height:1.75;max-width:500px;}
+.hero-actions{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;}
+.btn-hero{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:600;cursor:pointer;border:none;transition:all .18s;font-family:inherit;}
+.btn-primary{background:#fff;color:var(--blue);}
+.btn-primary:hover{background:#E8F0FB;transform:translateY(-1px);}
+.btn-secondary{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.32);}
+.btn-secondary:hover{background:rgba(255,255,255,.24);}
+
+/* 유의사항 카드 3개 */
+.notice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+@media(max-width:720px){.notice-grid{grid-template-columns:1fr;}}
+.notice-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);cursor:pointer;transition:all .18s;border-top:3px solid var(--blue-mid);position:relative;}
+.notice-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.notice-card h3{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.notice-card p{font-size:12px;color:var(--gray-600);line-height:1.65;}
+.notice-more{font-size:11.5px;color:var(--blue-mid);font-weight:600;margin-top:10px;display:flex;align-items:center;gap:3px;}
+
+/* 구분선 */
+.divider{display:flex;align-items:center;gap:12px;margin:4px 0 18px;}
+.divider-line{flex:1;height:1px;background:var(--gray-200);}
+.divider-label{font-size:12px;font-weight:600;color:var(--gray-400);letter-spacing:.5px;}
+
+/* 검색 */
+.search-wrap{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-mid) 100%);border-radius:var(--radius);padding:24px 24px 20px;box-shadow:var(--shadow-md);margin-bottom:14px;}
+.search-label{font-size:14px;font-weight:700;color:#fff;margin-bottom:12px;display:block;letter-spacing:-.2px;}
+.search-label small{display:block;font-size:12px;font-weight:400;opacity:.75;margin-top:3px;letter-spacing:0;}
+.search-row{display:flex;gap:8px;}
+.search-input{flex:1;padding:12px 16px;border:none;border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:box-shadow .15s;box-shadow:0 0 0 2px transparent;}
+.search-input:focus{box-shadow:0 0 0 2px #fff;}
+.search-input::placeholder{color:var(--gray-400);}
+.btn-search{padding:12px 22px;background:#fff;color:var(--blue);border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;}
+.btn-search:hover{background:var(--blue-light);}
+
+/* 태그 필터 */
+.tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;align-items:center;}
+.tag-label{font-size:11.5px;font-weight:600;color:var(--gray-400);margin-right:2px;}
+.tag-btn{padding:5px 13px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit;}
+.tag-btn:hover{border-color:var(--blue-mid);color:var(--blue);}
+.tag-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* 검색 유도 상태 */
+.search-prompt{text-align:center;padding:52px 20px;color:var(--gray-400);}
+.search-prompt-icon{font-size:40px;margin-bottom:14px;}
+.search-prompt h3{font-size:15px;font-weight:600;color:var(--gray-600);margin-bottom:6px;}
+.search-prompt p{font-size:13px;line-height:1.65;}
+
+/* 결과 카운트 */
+.result-info{font-size:12.5px;color:var(--gray-400);margin-bottom:12px;font-weight:500;}
+
+/* 사례 아코디언 */
+.case-list{display:flex;flex-direction:column;gap:8px;}
+.case-item{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border-left:3px solid var(--gray-200);transition:border-color .2s;}
+.case-item.open{border-left-color:var(--blue-mid);}
+.case-header{padding:16px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:background .15s;}
+.case-header:hover{background:var(--blue-pale);}
+.case-header-body{flex:1;min-width:0;}
+.case-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px;align-items:center;}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+.badge-tag{background:var(--gray-100);color:var(--gray-600);border:1px solid var(--gray-200);}
+.badge-blue{background:var(--blue-light);color:var(--blue);}
+.case-q{font-size:13.5px;font-weight:500;color:var(--gray-900);line-height:1.5;}
+.case-arrow{color:var(--gray-400);font-size:16px;transition:transform .25s;flex-shrink:0;margin-top:2px;}
+.case-item.open .case-arrow{transform:rotate(90deg);}
+
+/* 아코디언 본문 */
+.case-body{display:none;padding:0 18px 18px;border-top:1px solid var(--gray-200);}
+.case-item.open .case-body{display:block;}
+.case-section{margin-top:14px;}
+.case-section-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;background:var(--blue-light);display:inline-block;padding:2px 8px;border-radius:4px;}
+.case-section-text{font-size:13px;color:var(--gray-600);line-height:1.8;}
+.case-doc{font-size:11.5px;color:var(--gray-400);margin-top:12px;padding-top:10px;border-top:1px solid var(--gray-200);}
+.case-actions{margin-top:12px;display:flex;gap:8px;}
+.btn-sm{padding:7px 14px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .15s;}
+.btn-sm:hover{border-color:var(--blue-mid);color:var(--blue);}
+
+/* 검색 없음 */
+.empty{text-align:center;padding:48px 20px;color:var(--gray-400);}
+.empty-icon{font-size:36px;margin-bottom:12px;}
+
+/* ===== 결정트리 화면 ===== */
+#screen-tree{display:block;}
+.tree-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.btn-back{padding:8px 15px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-600);font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.btn-back:hover{border-color:var(--blue-mid);color:var(--blue);}
+.progress-bar{display:flex;align-items:center;gap:6px;margin-bottom:28px;}
+.p-dot{width:9px;height:9px;border-radius:50%;background:var(--gray-200);transition:all .25s;}
+.p-dot.done{background:var(--blue-mid);}
+.p-dot.active{background:var(--blue);transform:scale(1.25);}
+.p-line{flex:1;height:2px;background:var(--gray-200);border-radius:2px;}
+.p-line.done{background:var(--blue-mid);}
+.tree-q{font-size:20px;font-weight:700;letter-spacing:-.4px;line-height:1.4;margin-bottom:6px;}
+.tree-sub{font-size:13px;color:var(--gray-400);margin-bottom:24px;}
+.tree-options{display:grid;gap:10px;}
+.tree-opt{padding:17px 20px;background:#fff;border:2px solid var(--gray-200);border-radius:var(--radius);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:space-between;font-family:inherit;text-align:left;}
+.tree-opt:hover{border-color:var(--blue-mid);background:var(--blue-pale);transform:translateX(4px);}
+.tree-opt-label{font-size:14.5px;font-weight:600;color:var(--gray-900);}
+.tree-opt-desc{font-size:12px;color:var(--gray-400);margin-top:3px;}
+.tree-opt-arrow{color:var(--gray-400);font-size:18px;}
+.tree-opt:hover .tree-opt-arrow{color:var(--blue);}
+
+/* ===== 결과 화면 ===== */
+#screen-result{display:block;}
+.result-notice{background:var(--warn-bg);border:1.5px solid #F5D78E;border-radius:var(--radius);padding:20px 22px;margin-bottom:20px;}
+.result-notice-title{font-size:13px;font-weight:700;color:var(--warn);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.result-notice-text{font-size:13px;color:var(--warn);line-height:1.7;}
+.result-context{font-size:12px;color:var(--gray-400);margin-bottom:16px;}
+.result-context span{background:var(--blue-light);color:var(--blue);padding:2px 8px;border-radius:4px;font-weight:600;margin-right:4px;}
+.section-title{font-size:12px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;margin-bottom:12px;}
+
+/* ===== 팝업 모달 (유의사항) ===== */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-backdrop.open{display:flex;}
+.modal{background:#fff;border-radius:var(--radius);max-width:620px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.18);}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:#fff;z-index:1;}
+.modal-header h2{font-size:15px;font-weight:700;color:var(--blue);}
+.modal-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--gray-400);line-height:1;padding:0;}
+.modal-body{padding:20px 22px 26px;}
+.modal-period{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:4px;margin-bottom:14px;}
+.modal-section{margin-bottom:16px;}
+.modal-section-wrap{border-radius:14px;padding:18px 16px;margin-bottom:16px;}
+.modal-section-wrap.ok-wrap{background:#EDFAF3;border:2px solid #4CAF82;}
+.modal-section-wrap.no-wrap{background:#FFF0F2;border:2px solid #F06080;}
+.modal-section h4{font-size:15px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.modal-section h4.ok-title{color:#1B7A4A;}
+.modal-section h4.no-title{color:#C0304A;}
+.modal-h4-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.ok-icon-bg{background:#4CAF82;color:#fff;}
+.no-icon-bg{background:#F06080;color:#fff;}
+.modal-ok,.modal-no{background:#fff;border-radius:10px;padding:11px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.modal-ok:last-child,.modal-no:last-child{margin-bottom:0;}
+.modal-ok p,.modal-no p{font-size:13px;line-height:1.7;color:var(--gray-900);margin:0;}
+.modal-disclaimer{background:var(--warn-bg);border:1px solid #F5D78E;border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:var(--warn);line-height:1.6;margin-top:16px;}
+
+/* 공통 */
+.disclaimer{background:var(--warn-bg);border:1px solid #F5D78E;border-radius:var(--radius-sm);padding:14px 16px;font-size:12.5px;color:var(--warn);line-height:1.65;margin-top:20px;}
+.disclaimer strong{font-weight:700;}
+.btn-reset{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;margin-top:6px;}
+.btn-reset:hover{background:var(--blue-mid);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">경기도청 홍보업무 선거법 도우미 <small>공직선거법 질의회답 사례 검색 시스템</small></div>
+    <div class="header-badge">현재 버전 : v2.0.1</div>
+  </div>
+</header>
+
+<!-- ===== 홈 화면 ===== -->
+<div id="screen-home">
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-tag">경기도청 정책홍보담당관</div>
+    <h1>선거법 질의회신 찾다 지치셨나요?<br>질의회답 사례를 바로 찾아보세요</h1>
+    <p>선관위 질의회답 사례를 바탕으로 안내해드립니다.<Br>참고용이며 최종 판단은 반드시 선관위에 문의하세요.</p>
+    <div class="hero-actions">
+      <button class="btn-hero btn-primary" onclick="showTree()">▶ 단계별 사례 찾기</button>
+      <button class="btn-hero btn-secondary" onclick="document.getElementById('search-section').scrollIntoView({behavior:'smooth'})">🔍 키워드로 검색</button>
+    </div>
+  </div>
+
+  <!-- 유의사항 3카드 -->
+  <div class="notice-grid">
+    <div class="notice-card" onclick="openNotice('d180')">
+      <h3>📅 선거일 전 유의사항</h3>
+      <p>180일·60일 기준으로 달라지는 홍보물 발행·배부 및 행사 참석 제한사항을 확인하세요.</p>
+      <div class="notice-more">자세히 보기 →</div>
+    </div>
+    <div class="notice-card" onclick="openNotice('event')">
+      <h3>🎪 각종 행사 시 유의사항</h3>
+      <p>선거일 60일 전부터 적용되는 행사 개최·후원 가능 여부와 금지 유형을 확인하세요.</p>
+      <div class="notice-more">자세히 보기 →</div>
+    </div>
+    <div class="notice-card" onclick="openNotice('daily')">
+      <h3>📢 일상 홍보 시 유의사항</h3>
+      <p>홈페이지·SNS·인쇄물 등 일상적인 홍보활동 시 상시 적용되는 주의사항을 확인하세요.</p>
+      <div class="notice-more">자세히 보기 →</div>
+    </div>
+  </div>
+
+  <!-- 검색 -->
+  <div id="search-section" class="search-wrap">
+    <span class="search-label">🔍 키워드로 사례 검색<small>행사, 위촉식, SNS, 성과홍보, 경품 등 관련 키워드를 입력하세요</small></span>
+    <div class="search-row">
+      <input class="search-input" type="text" id="search-input"
+        placeholder="예: 행사, 위촉식, 홍보대사, 공모전, SNS, 성과홍보..."
+        oninput="onSearch()" onkeydown="if(event.key==='Enter')onSearch()">
+      <button class="btn-search" onclick="onSearch()">검색</button>
+    </div>
+  </div>
+
+  <!-- 태그 필터 -->
+  <div class="tag-row">
+    <span class="tag-label">매체별</span>
+    <button class="tag-btn active" onclick="filterTag(this,'all')">전체</button>
+    <button class="tag-btn" onclick="filterTag(this,'SNS')">SNS</button>
+    <button class="tag-btn" onclick="filterTag(this,'홈페이지·온라인')">홈페이지·온라인</button>
+    <button class="tag-btn" onclick="filterTag(this,'광고')">광고</button>
+    <button class="tag-btn" onclick="filterTag(this,'인쇄·홍보물')">인쇄·홍보물</button>
+    <button class="tag-btn" onclick="filterTag(this,'행사·이벤트')">행사·이벤트</button>
+  </div>
+
+  <div id="loading-indicator" style="text-align:center;padding:40px 20px;color:var(--gray-400);font-size:13.5px;">
+    ⏳ 사례 데이터를 불러오는 중입니다...
+  </div>
+  <div id="result-info" class="result-info"></div>
+  <div id="case-list"></div>
+
+</div>
+</div>
+
+<!-- ===== 결정트리 화면 ===== -->
+<div id="screen-tree">
+<div class="container">
+  <div class="tree-header">
+    <button class="btn-back" onclick="showHome()">← 처음으로</button>
+    <span style="font-size:12.5px;color:var(--gray-400)">단계별 사례 찾기</span>
+  </div>
+  <div class="progress-bar" id="prog"></div>
+  <div id="tree-content"></div>
+</div>
+</div>
+
+<!-- ===== 결과 화면 ===== -->
+<div id="screen-result">
+<div class="container">
+  <div class="tree-header">
+    <button class="btn-back" onclick="showHome()">← 처음으로</button>
+    <button class="btn-back" onclick="showTree()">↩ 다시 찾기</button>
+  </div>
+  <div id="result-content"></div>
+</div>
+</div>
+
+<!-- ===== 유의사항 팝업 ===== -->
+<div class="modal-backdrop" id="modal-notice" onclick="closeNotice(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="notice-title"></h2>
+      <button class="modal-close" onclick="closeNotice()">✕</button>
+    </div>
+    <div class="modal-body" id="notice-body"></div>
+  </div>
+</div>
+
+<script>
+// ===== 구글 Apps Script 연동 =====
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec';
+let CASES = [];
+
+async function loadCasesFromSheet() {
+  const loadingEl = document.getElementById('loading-indicator');
+  try {
+    const res = await fetch(APPS_SCRIPT_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    CASES = data;
+    if (loadingEl) loadingEl.style.display = 'none';
+    renderCases();
+  } catch (e) {
+    console.error('시트 로드 실패:', e);
+    if (loadingEl) {
+      loadingEl.innerHTML = `
+        <div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:10px;padding:18px 20px;text-align:left;max-width:480px;margin:0 auto;">
+          <div style="font-weight:700;color:#991B1B;margin-bottom:6px;">⚠️ 데이터를 불러오지 못했습니다</div>
+          <div style="font-size:12.5px;color:#7F1D1D;line-height:1.7;">
+            내부행정망에서 외부 접근이 차단된 것 같아요.<br>
+            오프라인 버전(v2.0.1)을 사용하거나 외부망에서 접속해주세요.
+          </div>
+        </div>`;
+    }
+  }
+}
+
+const NOTICE_DATA = {
+  d180: {
+    title: '📅 선거일 전 유의사항',
+    sections: [
+      {
+        period: '선거일 전 180일부터 적용 (공직선거법 제86조제5항·제6항)',
+        ok: [
+          '도지사 직·성명이 포함된 의례적 초청장을 제한된 범위의 자에게 발송하는 행위',
+          '법령에 의해 발행·배부하는 홍보물에 도지사 성명·사진이 게재된 의례적 인사말을 게재하는 행위',
+          '도 명의 유튜브 채널에 <strong>알림 기능 미설정</strong>으로 도지사 출연 영상을 게시하는 행위',
+        ],
+        no: [
+          '사업계획·활동상황 홍보 녹화물을 관할구역 운행 버스에서 방송하는 행위',
+          '근무시간 중 공공기관이 아닌 단체 주최 행사(청사 개최 포함)에 도지사가 참석하는 행위',
+          '공공기관 행사라도 직원체육대회·등산대회 등 내부 행사에 근무시간 중 참석하는 행위',
+        ]
+      },
+      {
+        period: '선거일 전 60일부터 적용 (공직선거법 제86조제2항)',
+        ok: [
+          '법령에 의하여 개최·후원하도록 규정된 행사를 개최·후원하는 행위',
+          '특정일·특정시기에 개최하지 않으면 목적 달성이 불가한 행사',
+          '국가유공자 위령제, 국경일 기념식, 각종기념일 규정에 의한 기념행사 개최·후원',
+          '읍·면·동 이상 행정구역 단위의 정기적인 종합주민체육대회·전래 고유축제 개최·후원',
+          '천재지변 기타 재해 구호·복구 행위',
+        ],
+        no: [
+          '교양강좌, 사업설명회, 공청회, 직능단체모임, 체육대회, 경로행사, 민원상담 등 각종 행사(온라인 포함) 개최·후원',
+          '통·리·반장 회의에 참석하는 행위 (재해·긴급민원 발생 시는 가능)',
+          '정당의 정강·정책을 선거구민 대상으로 홍보·선전하는 행위',
+          '개최·후원 금지행사에 후원명의(명칭)만을 제공하는 행위',
+        ]
+      }
+    ]
+  },
+  event: {
+    title: '🎪 각종 행사 시 유의사항',
+    sections: [
+      {
+        period: '행사에 관련된 사항은 선관위 질의회신을 받는 것이 좋습니다',
+        ok: [
+          '법령에 의하여 개최·후원하도록 규정된 행사',
+          '특정일·특정시기에 개최하지 않으면 목적 달성 불가한 행사 (농산물박람회, 도로개통식 등)',
+          '국가유공자 위령제, 국경일 기념식 등 각종기념일 규정에 따른 기념행사',
+          '법령·조례에 의해 주민 동의가 필요한 사업의 사업설명회',
+          '읍·면·동 이상 행정구역 단위 정기 종합주민체육대회 또는 전래 고유축제',
+          '직업지원교육 또는 유상 교양강좌 개최·후원, 주민자치센터 교양강좌 후원',
+          '정부가 주관하는 공공행사에 인력·시설·장비 지원',
+          '천재·지변 기타 재해 구호·복구 행위',
+        ],
+        no: [
+          '교양강좌, 사업설명회, 공청회, 직능단체모임, 체육대회, 경로행사, 민원상담 등 각종 행사 개최·후원',
+          '개최·후원 금지 행사에 후원명의(명칭)만 제공하는 행위',
+          '연초 포괄 보조금으로 지원받은 사회단체가 선거일 60일 이후 개최 행사에 해당 보조금을 지출하는 행위',
+          '지자체장이 계획적·반복적으로 읍·면·동을 순회하며 사업계획·추진실적 홍보',
+        ]
+      }
+    ]
+  },
+  daily: {
+    title: '📢 일상 홍보 시 유의사항',
+    sections: [
+      {
+        period: '상시 적용 사항',
+        ok: [
+          '도 명의 홈페이지·유튜브에 도지사 통상 동정·행사 참석 등 도정 소식을 게시하는 행위 (<strong>단, 유튜브의 경우 알림 기능 미설정</strong>)',
+          '필요에 의해 홈페이지·SNS에 자연재난 성금 모금 홍보 이미지를 게시하는 행위(<strong>단, 안내만 가능하며, 후원 모금의 주체가 되서는 안 됨</strong>)',
+          '환경·의료·교통·조세·건축 등 민원안내서 또는 반상회보 등 주민 일상생활 정보 제공 홍보물',
+          '역사·지리·문화·특산물·관광명소 안내 홍보물',
+          '재난관리·안전사고 예방 홍보물',
+          '청사 입구·외벽·담장 게시 홍보물 (<strong>단, 도지사 직명 미게재</strong>)',
+          '공모전 개최 및 입상자에게 도 명의로 상장·통상적 부상 제공',
+        ],
+        no: [
+          '도지사 업적을 홍보하거나 선거에 영향을 미치는 내용 게시',
+          '<strong>분기별 1종 1회를 초과하여</strong> SNS·카카오톡 채널알림 등 알림 기능을 활용해 사업계획·추진실적 홍보물 발송',
+          '도지사 직·성명을 밝히거나 그가 하는 것으로 추정되는 방법으로 경품·기념품 제공',
+          '법령·조례 근거 없이 소속 직원에게 기념품·경품 제공',
+          '공공기관 명의를 밝혀도 경기도가 하는 것으로 추정되거나 공동 추진으로 보이는 방식으로 홍보',
+        ]
+      }
+    ]
+  }
+};
+
+let currentTag = 'all';
+let currentKw = '';
+let treeState = { step: 1, q1: null, q2: null };
+let openCaseId = null;
+
+// ===== 화면 전환 =====
+function showHome() {
+  document.getElementById('screen-home').style.display = '';
+  document.getElementById('screen-tree').style.display = 'none';
+  document.getElementById('screen-result').style.display = 'none';
+}
+function showTree() {
+  treeState = { step: 1, q1: null, q2: null };
+  document.getElementById('screen-home').style.display = 'none';
+  document.getElementById('screen-tree').style.display = '';
+  document.getElementById('screen-result').style.display = 'none';
+  renderTree();
+}
+function showResult(cases, ctx) {
+  document.getElementById('screen-home').style.display = 'none';
+  document.getElementById('screen-tree').style.display = 'none';
+  document.getElementById('screen-result').style.display = '';
+  renderResult(cases, ctx);
+}
+
+// ===== 유의사항 팝업 =====
+function openNotice(type) {
+  const d = NOTICE_DATA[type];
+  document.getElementById('notice-title').textContent = d.title;
+  let html = '';
+  d.sections.forEach(sec => {
+    html += `<div class="modal-period">${sec.period}</div>`;
+    html += `<div class="modal-section-wrap ok-wrap"><div class="modal-section"><h4 class="ok-title"><span class="modal-h4-icon ok-icon-bg">✔</span>이런 경우는 가능해요</h4>`;
+    sec.ok.forEach(t => html += `<div class="modal-ok"><p>${t}</p></div>`);
+    html += `</div></div><div class="modal-section-wrap no-wrap"><div class="modal-section"><h4 class="no-title"><span class="modal-h4-icon no-icon-bg">✕</span>이런 경우는 안 돼요</h4>`;
+    sec.no.forEach(t => html += `<div class="modal-no"><p>${t}</p></div>`);
+    html += `</div></div>`;
+    html += `</div>`;
+  });
+  html += `<div class="modal-disclaimer">⚠ 행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있습니다. 최종 판단은 <strong>경기도선거관리위원회</strong>에 문의하세요.</div>`;
+  document.getElementById('notice-body').innerHTML = html;
+  document.getElementById('modal-notice').classList.add('open');
+}
+function closeNotice(e) {
+  if (!e || e.target === document.getElementById('modal-notice'))
+    document.getElementById('modal-notice').classList.remove('open');
+}
+
+// ===== 사례 목록 =====
+function getFiltered() {
+  let list = CASES;
+  if (currentTag !== 'all') list = list.filter(c => c.tags.includes(currentTag));
+  if (currentKw) {
+    const kw = currentKw.toLowerCase();
+    list = list.filter(c =>
+      c.question.toLowerCase().includes(kw) ||
+      c.answer.toLowerCase().includes(kw) ||
+      c.searchTags.some(t => t.toLowerCase().includes(kw)) ||
+      c.tags.some(t => t.toLowerCase().includes(kw))
+    );
+  }
+  return list;
+}
+
+function renderCases() {
+  const hasQuery = currentKw || currentTag !== 'all';
+  const infoEl = document.getElementById('result-info');
+  const listEl = document.getElementById('case-list');
+
+  if (!hasQuery) {
+    infoEl.textContent = '';
+    listEl.innerHTML = `
+      <div class="search-prompt">
+        <div class="search-prompt-icon">🔍</div>
+        <h3>키워드를 입력하거나 태그를 선택해주세요</h3>
+        <p>검색어 예시: 행사, 위촉식, 홍보대사, 공모전, SNS, 성과홍보, 경품, 기자단</p>
+      </div>`;
+    return;
+  }
+
+  const list = getFiltered();
+  infoEl.textContent = `검색 결과 ${list.length}건`;
+
+  if (list.length === 0) {
+    listEl.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>검색 결과가 없습니다.<br>다른 키워드로 검색해보세요.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = list.map(c => `
+    <div class="case-item" id="case-${c.id}">
+      <div class="case-header" onclick="toggleCase(${c.id})">
+        <div class="case-header-body">
+          <div class="case-meta">
+            ${c.tags.map(t => `<span class="badge badge-tag">${t}</span>`).join('')}
+          </div>
+          <div class="case-q">${c.question}</div>
+        </div>
+        <div class="case-arrow">›</div>
+      </div>
+      <div class="case-body">
+        <div class="case-section">
+          <div class="case-section-label">선관위 회답</div>
+          <div class="case-section-text">${c.answer}</div>
+        </div>
+        <div class="case-section">
+          <div class="case-section-label">관련 법조항</div>
+          <div class="case-section-text">${c.law}</div>
+        </div>
+        <div class="case-doc">질의: ${c.docQ} &nbsp;|&nbsp; 회답: ${c.docA}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCase(id) {
+  const el = document.getElementById('case-' + id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.case-item.open').forEach(e => e.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+function onSearch() {
+  currentKw = document.getElementById('search-input').value.trim();
+  renderCases();
+}
+function filterTag(btn, tag) {
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTag = tag;
+  renderCases();
+}
+
+// ===== 결정트리 =====
+const TREE = {
+  1: {
+    q: '어떤 업무를 진행 중인가요?',
+    sub: '가장 가까운 유형을 선택해주세요.',
+    opts: [
+      { label: '행사 개최·참석', desc: '위촉식, 소통행사, 체육대회, 발대식, 공모전 등', val: 'event' },
+      { label: '홍보물 제작·광고', desc: '정책 광고, 성과홍보, 소식지, G버스TV 등', val: 'ad' },
+      { label: '온라인·SNS 게시', desc: '홈페이지, 유튜브, SNS, 카카오톡 등', val: 'online' },
+    ]
+  },
+  2: {
+    event: {
+      q: '어떤 행사인가요?',
+      sub: '해당하는 유형을 선택해주세요.',
+      opts: [
+        { label: '도지사가 직접 참석하는 행사', desc: '위촉식, 소통행사, 현장방문, 체육대회 등', val: 'event_governor' },
+        { label: '경기도가 주최·후원하는 행사', desc: '공모전, 기자단 운영 등', val: 'event_host' },
+        { label: '경품·기념품·인센티브 제공', desc: '행사 경품, 기자단 인센티브, 공모전 부상 등', val: 'event_gift' },
+        { label: '공공기관·출연기관 행사 홍보', desc: '공공기관 주최 행사를 경기도 채널에서 홍보', val: 'event_public' },
+      ]
+    },
+    ad: {
+      q: '어떤 홍보물인가요?',
+      sub: '해당하는 유형을 선택해주세요.',
+      opts: [
+        { label: '정책·사업 정보 제공 광고', desc: '신청방법, 지원대상 등 도민 생활정보 중심', val: 'ad_info' },
+        { label: '성과·추진실적 홍보 (1종1회)', desc: '도정 성과, 분기 홍보물, 도지사 사진 포함', val: 'ad_result' },
+        { label: '옥외광고·G버스TV 등 매체', desc: '버스 래핑, 미디어보드, G버스TV 등', val: 'ad_outdoor' },
+      ]
+    },
+    online: {
+      q: '어떤 온라인 활동인가요?',
+      sub: '해당하는 유형을 선택해주세요.',
+      opts: [
+        { label: '홈페이지 콘텐츠 게시', desc: '공약현황, 기획콘텐츠, 정책비교 게시 등', val: 'online_web' },
+        { label: 'SNS·유튜브 게시', desc: '경기도 공식 SNS, 유튜브 채널 게시', val: 'online_sns' },
+        { label: '행사 관련 사후 게시', desc: '행사 사진·영상을 홈페이지·SNS에 게시', val: 'online_post' },
+        { label: '재난·성금 모금 홍보', desc: '재난 대응, 성금 모금 안내 게시', val: 'online_disaster' },
+      ]
+    }
+  }
+};
+
+const CASE_MAP = {
+  event_governor: [14, 16, 17, 1, 26],
+  event_host: [11, 18, 20, 25, 27],
+  event_gift: [2, 7, 21, 25, 27, 28],
+  event_public: [6, 23, 24],
+  ad_info: [3, 12],
+  ad_result: [5, 13],
+  ad_outdoor: [13],
+  online_web: [4, 8, 10],
+  online_sns: [5, 6, 15, 19],
+  online_post: [22, 15],
+  online_disaster: [9, 12],
+};
+
+function renderProg(step, q1) {
+  const prog = document.getElementById('prog');
+  const steps = q1 ? 2 : 1;
+  let html = '';
+  for (let i = 1; i <= 2; i++) {
+    const cls = i < step ? 'done' : i === step ? 'active' : '';
+    html += `<div class="p-dot ${cls}"></div>`;
+    if (i < 2) html += `<div class="p-line ${i < step ? 'done' : ''}"></div>`;
+  }
+  prog.innerHTML = html;
+}
+
+function renderTree() {
+  const step = treeState.step;
+  renderProg(step, treeState.q1);
+  const content = document.getElementById('tree-content');
+
+  if (step === 1) {
+    const d = TREE[1];
+    content.innerHTML = `
+      <div class="tree-q">${d.q}</div>
+      <div class="tree-sub">${d.sub}</div>
+      <div class="tree-options">${d.opts.map(o => `
+        <button class="tree-opt" onclick="selectQ1('${o.val}')">
+          <div><div class="tree-opt-label">${o.label}</div><div class="tree-opt-desc">${o.desc}</div></div>
+          <div class="tree-opt-arrow">›</div>
+        </button>`).join('')}
+      </div>`;
+  } else {
+    const d = TREE[2][treeState.q1];
+    content.innerHTML = `
+      <div class="tree-q">${d.q}</div>
+      <div class="tree-sub">${d.sub}</div>
+      <div class="tree-options">${d.opts.map(o => `
+        <button class="tree-opt" onclick="selectQ2('${o.val}')">
+          <div><div class="tree-opt-label">${o.label}</div><div class="tree-opt-desc">${o.desc}</div></div>
+          <div class="tree-opt-arrow">›</div>
+        </button>`).join('')}
+      </div>
+      <div style="margin-top:14px"><button class="btn-back" onclick="goBack()">← 이전</button></div>`;
+  }
+}
+
+function selectQ1(val) { treeState.q1 = val; treeState.step = 2; renderTree(); }
+function goBack() { treeState.step = 1; renderTree(); }
+function selectQ2(val) {
+  const ids = CASE_MAP[val] || [];
+  const cases = ids.map(id => CASES.find(c => c.id === id)).filter(Boolean);
+  const q1Labels = { event: '행사 개최·참석', ad: '홍보물 제작·광고', online: '온라인·SNS 게시' };
+  const q2Labels = {
+    event_governor: '도지사 직접 참석 행사', event_host: '경기도 주최·후원 행사',
+    event_gift: '경품·기념품·인센티브 제공', event_public: '공공기관 행사 홍보',
+    ad_info: '정책·사업 정보 제공', ad_result: '성과·추진실적 홍보',
+    ad_outdoor: '옥외광고·G버스TV 매체',
+    online_web: '홈페이지 콘텐츠 게시', online_sns: 'SNS·유튜브 게시',
+    online_post: '행사 사후 게시', online_disaster: '재난·성금 모금 홍보',
+  };
+  showResult(cases, { q1: q1Labels[treeState.q1], q2: q2Labels[val] });
+}
+
+// ===== 결과 화면 =====
+function renderResult(cases, ctx) {
+  const el = document.getElementById('result-content');
+  el.innerHTML = `
+    <div class="result-context">
+      <span>${ctx.q1}</span> › <span>${ctx.q2}</span>
+    </div>
+    <div class="result-notice">
+      <div class="result-notice-title">📋 관련 선관위 회답 사례 ${cases.length}건</div>
+      <div class="result-notice-text">아래 사례는 참고용입니다. 구체적인 행위 방식·시기·내용에 따라 판단이 달라질 수 있으니 반드시 선관위에 확인하세요.</div>
+    </div>
+    ${cases.length === 0
+      ? '<div class="empty"><div class="empty-icon">📋</div>유사 사례를 찾지 못했습니다.<br>선관위에 직접 문의하세요.</div>'
+      : `<div class="case-list">${cases.map(c => `
+        <div class="case-item" id="rc-${c.id}">
+          <div class="case-header" onclick="toggleRCase(${c.id})">
+            <div class="case-header-body">
+              <div class="case-meta">${c.tags.map(t => `<span class="badge badge-tag">${t}</span>`).join('')}</div>
+              <div class="case-q">${c.question}</div>
+            </div>
+            <div class="case-arrow">›</div>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <div class="case-section-label">선관위 회답</div>
+              <div class="case-section-text">${c.answer}</div>
+            </div>
+            <div class="case-section">
+              <div class="case-section-label">관련 법조항</div>
+              <div class="case-section-text">${c.law}</div>
+            </div>
+            <div class="case-doc">질의: ${c.docQ} &nbsp;|&nbsp; 회답: ${c.docA}</div>
+          </div>
+        </div>`).join('')}</div>`
+    }
+    <div class="disclaimer" style="margin-top:20px">
+      <strong>⚠ 주의사항</strong> 이 결과는 참고용이며 법적 효력이 없습니다. 행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있습니다. 최종 판단은 <strong>경기도선거관리위원회(031-259-4876)</strong>로 문의하세요.
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-reset" onclick="showTree()">↩ 다시 찾기</button>
+      <button class="btn-reset" style="background:var(--gray-600)" onclick="showHome()">🏠 홈으로</button>
+    </div>`;
+}
+
+function toggleRCase(id) {
+  const el = document.getElementById('rc-' + id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('#result-content .case-item.open').forEach(e => e.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+// 초기 화면 설정
+document.getElementById('screen-tree').style.display = 'none';
+document.getElementById('screen-result').style.display = 'none';
+document.getElementById('screen-home').style.display = 'block';
+loadCasesFromSheet();
+</script>
+</body>
+</html>
