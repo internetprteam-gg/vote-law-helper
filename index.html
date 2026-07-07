@@ -379,7 +379,7 @@ function submitAdminCase(){
   var done=false;
   var ac=(typeof AbortController!=='undefined')?new AbortController():null;
   var timer=setTimeout(function(){if(done)return;done=true;if(ac)ac.abort();S.adminFormStatus='error';renderAdmin();},15000);
-  var opt={method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)};
+  var opt={method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(JSON.stringify(payload))};
   if(ac) opt.signal=ac.signal;
   fetch(CONFIG.reportPostUrl,opt)
     .then(function(){if(done)return;done=true;clearTimeout(timer);S.adminFormStatus='success';S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:''};renderAdmin();loadLive();})
@@ -845,7 +845,7 @@ function submitReport(){
     var done=false;
     var ac=(typeof AbortController!=='undefined')?new AbortController():null;
     var timer=setTimeout(function(){ if(done)return; done=true; if(ac)ac.abort(); S.reportStatus='failed'; renderReport(); },12000);
-    var opt={ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) };
+    var opt={ method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'data='+encodeURIComponent(JSON.stringify(payload)) };
     if(ac) opt.signal=ac.signal;
     fetch(CONFIG.reportPostUrl,opt)
       .then(function(){ if(done)return; done=true; clearTimeout(timer); S.reportStatus='success'; S.r={q:'',a:'',date:'',law:'',contact:'',hp:''}; renderReport(); })
