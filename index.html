@@ -3,8 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 콘텐츠 보안 정책(CSP): 외부 리소스를 구글 시트/GAS·Pretendard CDN으로만 제한 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://cdn.jsdelivr.net; font-src https://cdn.jsdelivr.net; img-src 'self' data:; connect-src https://docs.google.com https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <title>경기도청 홍보업무 선거법 도우미</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<!-- Pretendard 웹폰트. 공급망 무결성(SRI) 적용을 권장합니다.
+     인터넷 되는 환경에서 아래 명령으로 해시를 구해 integrity="sha384-..." 를 추가하세요:
+       curl -sL https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css | openssl dgst -sha384 -binary | openssl base64 -A
+     예) <link rel="stylesheet" ... integrity="sha384-<위 출력값>" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
   :root{
     --navy:#16408F; --navy-deep:#0E3070; --sidebar:#0F1B33; --accent-line:#7FA8F0;
@@ -50,7 +57,7 @@ var CONFIG = {
   daysUntilElection: 120,
   dataDate: '2026. 3. 18.',
   sheetId: '19xSoIFRxA8HgRVKIitxp6MuRk_Gax_T85YtAz9FQGiQ',
-  reportPostUrl: 'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec'
+  reportPostUrl: 'https://script.google.com/macros/s/AKfycbxOTlDOKAxj81kSjJCiNXHUo22yLQ4ioLICF9h6-GqMd-N3htvVMiNJ7ieGc8fDa5r_/exec'
 };
 var PHONE = '031-259-4876';
 
@@ -238,17 +245,21 @@ function renderTopbar(){
 }
 
 /* ---------- 개요 (home) ---------- */
+var HOME_LIMIT = 5;
 function homeResultsHtml(){
   var list = filteredCases(S.homeQ, '전체');
-  var rows = list.map(function(c){
+  if(!list.length){
+    return '<div style="padding:32px;text-align:center;color:var(--sub);font-size:14px">‘'+esc(S.homeQ)+'’에 대한 사례가 없습니다.</div>';
+  }
+  var rows = list.slice(0,HOME_LIMIT).map(function(c){
     var co=core(c);
     return '<button data-pick="'+c.id+'" style="width:100%;text-align:left;display:flex;gap:12px;align-items:center;padding:14px 16px;background:none;border:none;border-top:1px solid var(--line-soft);cursor:pointer">'+
       '<span style="flex:1;min-width:0"><span style="display:block;font-size:15px;font-weight:600;color:var(--ink);line-height:1.45">'+hl(c.question,S.homeQ)+'</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">'+esc(co.tagText)+'</span></span>'+
       '<span aria-hidden="true" style="flex:none;color:var(--muted);font-size:13px">→</span>'+
     '</button>';
   }).join('');
-  if(!list.length){
-    rows='<div style="padding:32px;text-align:center;color:var(--sub);font-size:14px">‘'+esc(S.homeQ)+'’에 대한 사례가 없습니다.</div>';
+  if(list.length>HOME_LIMIT){
+    rows+='<button data-morecases="1" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:14px 16px;background:var(--tint);border:none;border-top:1px solid var(--line);color:var(--navy);font-size:14px;font-weight:600;cursor:pointer">더 많은 사례 보기 (전체 '+list.length+'건) →</button>';
   }
   return rows;
 }
@@ -541,17 +552,26 @@ function renderReport(){
   });
   var sub=document.getElementById('report-submit'); if(sub) sub.addEventListener('click',submitReport);
 }
+var REPORT_MAX = 4000; /* 필드별 최대 길이 — 과대 페이로드 방어(1차). 서버측에서도 반드시 재검증 */
 function submitReport(){
-  if(S.r.hp) return; /* honeypot */
+  if(S.r.hp) return; /* honeypot: 봇 제출 무시 */
   if(!S.r.q.trim()||!S.r.a.trim()){ S.reportStatus='invalid'; renderReport(); return; }
+  /* 길이 상한 — 클라이언트는 우회 가능하므로 방어의 1차선일 뿐, GAS doPost에서 재검증 필요 */
+  S.r.q=S.r.q.slice(0,REPORT_MAX); S.r.a=S.r.a.slice(0,REPORT_MAX);
+  S.r.date=S.r.date.slice(0,200); S.r.law=S.r.law.slice(0,500); S.r.contact=S.r.contact.slice(0,300);
   S.reportStatus='sending'; renderReport();
   if(CONFIG.reportPostUrl){
     var payload={ type:'report', question:S.r.q, answer:S.r.a, date:S.r.date, law:S.r.law, contact:S.r.contact };
     /* no-cors: GAS 웹앱은 CORS 응답 헤더를 주지 않아 응답 본문을 읽을 수 없으므로,
        simple request(text/plain)로 저장만 하고 성공 처리한다. */
-    fetch(CONFIG.reportPostUrl,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) })
-      .then(function(){ S.reportStatus='success'; S.r={q:'',a:'',date:'',law:'',contact:'',hp:''}; renderReport(); })
-      .catch(function(){ S.reportStatus='failed'; renderReport(); });
+    var done=false;
+    var ac=(typeof AbortController!=='undefined')?new AbortController():null;
+    var timer=setTimeout(function(){ if(done)return; done=true; if(ac)ac.abort(); S.reportStatus='failed'; renderReport(); },12000);
+    var opt={ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) };
+    if(ac) opt.signal=ac.signal;
+    fetch(CONFIG.reportPostUrl,opt)
+      .then(function(){ if(done)return; done=true; clearTimeout(timer); S.reportStatus='success'; S.r={q:'',a:'',date:'',law:'',contact:'',hp:''}; renderReport(); })
+      .catch(function(){ if(done)return; done=true; clearTimeout(timer); S.reportStatus='failed'; renderReport(); });
   } else {
     setTimeout(function(){ S.reportStatus='success'; renderReport(); },1200);
   }
@@ -617,11 +637,12 @@ function refreshSidebar(){
 }
 
 document.getElementById('app').addEventListener('click',function(e){
-  var t=e.target.closest('[data-nav],[data-chip],[data-pick],[data-tab],[data-zone],[data-calctab],[data-filter],[data-select]');
+  var t=e.target.closest('[data-nav],[data-chip],[data-pick],[data-morecases],[data-tab],[data-zone],[data-calctab],[data-filter],[data-select]');
   if(!t) return;
   if(t.hasAttribute('data-nav')){ setView(t.getAttribute('data-nav')); return; }
   if(t.hasAttribute('data-chip')){ S.homeQ=t.getAttribute('data-chip'); renderHome(); return; }
   if(t.hasAttribute('data-pick')){ var id=+t.getAttribute('data-pick'); S.view='cases'; S.cs.selectedId=id; S.cs.q=S.homeQ; renderView(); return; }
+  if(t.hasAttribute('data-morecases')){ S.view='cases'; S.cs.q=S.homeQ; S.cs.filterTag='전체'; renderView(); return; }
   if(t.hasAttribute('data-tab')){ S.activeTab=t.getAttribute('data-tab');
     Array.prototype.forEach.call(document.querySelectorAll('[data-tab]'),function(b){ var a=(b.getAttribute('data-tab')===S.activeTab);
       b.setAttribute('aria-selected',a?'true':'false'); b.style.borderBottom=a?'2px solid var(--navy)':'2px solid transparent'; b.style.fontWeight=a?'700':'500'; b.style.color=a?'var(--navy)':'var(--sub)'; });
