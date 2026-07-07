@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -80,6 +81,7 @@ var CONFIG = {
   dataDate: '2026. 3. 18.',
   sheetId: '19xSoIFRxA8HgRVKIitxp6MuRk_Gax_T85YtAz9FQGiQ',
   reportPostUrl: 'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec',
+  adminTokenHash: ''    /* ← SHA-256(ADMIN_TOKEN) 64자리 hex. 관리자 버튼 → 해시 생성기로 만들 것 */
 };
 var PHONE = '031-259-4876';
 
@@ -217,64 +219,83 @@ function renderDbError(){
 
 function showAdminPin(){
   if(S.adminAuth){ setView('admin'); return; }
+  var hashMode=!CONFIG.adminTokenHash; /* 해시 미설정 → 해시 생성기 모드 */
   var ov=document.createElement('div');
   ov.id='admin-ov';
   ov.setAttribute('role','dialog');
   ov.setAttribute('aria-modal','true');
   ov.style.cssText='position:fixed;inset:0;background:rgba(15,27,51,.55);display:flex;align-items:center;justify-content:center;z-index:999';
-  var inner=CONFIG.reportPostUrl
-    ? '<div style="font-size:13px;color:var(--muted);margin-bottom:20px">관리자 토큰을 입력하세요. 토큰은 GAS <code>ADMIN_TOKEN</code> 값입니다.</div>'+
+  var inner=hashMode
+    ? '<div style="font-size:13px;line-height:1.65;padding:11px 13px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);margin-bottom:16px">'+
+        'adminTokenHash 미설정 — 아래에 GAS ADMIN_TOKEN을 입력하면 해시를 생성합니다. 생성된 값을 index.html의 <code>adminTokenHash</code>에 붙여넣으세요.'+
+      '</div>'+
+      '<input id="apin" type="password" maxlength="200" placeholder="GAS ADMIN_TOKEN 입력" autocomplete="off" style="width:100%;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:9px;font-size:15px;outline:none;box-sizing:border-box">'+
+      '<div id="apin-err" style="min-height:18px;font-size:13px;color:var(--no-t);margin-top:5px"></div>'+
+      '<div id="hash-out" style="display:none;margin-top:8px;padding:10px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-size:12px;font-family:var(--mono);word-break:break-all;line-height:1.7"></div>'+
+      '<div style="display:flex;gap:8px;margin-top:14px">'+
+        '<button id="apin-cancel" style="flex:1;height:44px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:15px;cursor:pointer">닫기</button>'+
+        '<button id="apin-ok" style="flex:1;height:44px;border:none;border-radius:9px;background:var(--navy);color:#fff;font-size:15px;font-weight:600;cursor:pointer">해시 생성</button>'+
+      '</div>'
+    : '<div style="font-size:13px;color:var(--muted);margin-bottom:18px">GAS ADMIN_TOKEN을 입력하세요.</div>'+
       '<input id="apin" type="password" maxlength="200" placeholder="관리자 토큰" aria-label="관리자 토큰" autocomplete="off" style="width:100%;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:9px;font-size:16px;outline:none;box-sizing:border-box">'+
-      '<div id="apin-err" style="min-height:20px;font-size:13px;color:var(--no-t);margin-top:6px"></div>'+
-      '<div style="display:flex;gap:8px;margin-top:16px">'+
+      '<div id="apin-err" style="min-height:18px;font-size:13px;color:var(--no-t);margin-top:5px"></div>'+
+      '<div style="display:flex;gap:8px;margin-top:14px">'+
         '<button id="apin-cancel" style="flex:1;height:44px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:15px;cursor:pointer">취소</button>'+
         '<button id="apin-ok" style="flex:1;height:44px;border:none;border-radius:9px;background:var(--navy);color:#fff;font-size:15px;font-weight:600;cursor:pointer">확인</button>'+
-      '</div>'
-    : '<div style="font-size:14px;line-height:1.65;padding:12px 14px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);margin-bottom:16px">'+
-        '<strong>CONFIG.reportPostUrl 미설정</strong><br>doPost.gs 재배포 후 exec URL을 <code>CONFIG.reportPostUrl</code>에 입력해야 관리자 기능을 사용할 수 있습니다.'+
-      '</div>'+
-      '<button id="apin-cancel" style="width:100%;height:44px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:15px;cursor:pointer">닫기</button>';
+      '</div>';
   ov.innerHTML=
-    '<div style="background:#fff;border-radius:16px;padding:32px 28px;min-width:300px;max-width:380px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.22)">'+
-      '<div style="font-size:18px;font-weight:700;margin-bottom:4px">관리자 모드</div>'+inner+
+    '<div style="background:#fff;border-radius:16px;padding:32px 28px;min-width:300px;max-width:400px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.22)">'+
+      '<div style="font-size:18px;font-weight:700;margin-bottom:6px">관리자 모드</div>'+inner+
     '</div>';
   document.body.appendChild(ov);
-  document.getElementById('apin-cancel').addEventListener('click',function(){ov.remove();});
-  ov.addEventListener('click',function(ev){if(ev.target===ov)ov.remove();});
-  if(!CONFIG.reportPostUrl) return;
   var inp=document.getElementById('apin');
   var errEl=document.getElementById('apin-err');
   var okBtn=document.getElementById('apin-ok');
   inp.focus();
+  document.getElementById('apin-cancel').addEventListener('click',function(){ov.remove();});
+  ov.addEventListener('click',function(ev){if(ev.target===ov)ov.remove();});
+
+  function sha256hex(str){
+    return crypto.subtle.digest('SHA-256',new TextEncoder().encode(str))
+      .then(function(buf){
+        return [].slice.call(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      });
+  }
+
+  if(hashMode){
+    /* 해시 생성기 모드 — 네트워크 없음, 브라우저 내에서만 동작 */
+    okBtn.addEventListener('click',function(){
+      var val=inp.value.trim();
+      if(!val){errEl.textContent='토큰을 입력하세요.';return;}
+      sha256hex(val).then(function(hex){
+        var out=document.getElementById('hash-out');
+        out.style.display='block';
+        out.innerHTML='index.html CONFIG.adminTokenHash 에 붙여넣기:<br>'+
+          '<strong style="user-select:all">'+esc(hex)+'</strong> '+
+          '<button onclick="navigator.clipboard&&navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent=\'복사됨 ✓\'" '+
+          'style="height:26px;padding:0 9px;border:1px solid var(--line);border-radius:5px;background:#fff;font-size:11px;cursor:pointer">복사</button>';
+      });
+    });
+    inp.addEventListener('keydown',function(ev){if(ev.key==='Enter')okBtn.click();});
+    return;
+  }
+
+  /* 토큰 검증 모드 — 네트워크 없이 SHA-256 로컬 비교 */
   function tryToken(){
     var token=inp.value.trim();
     if(!token){errEl.textContent='토큰을 입력하세요.';return;}
-    /* 입력 잠금 후 GAS에서 서버 측 검증 */
     inp.disabled=true; okBtn.disabled=true; okBtn.textContent='확인 중…'; errEl.textContent='';
-    var done=false;
-    var ac=(typeof AbortController!=='undefined')?new AbortController():null;
-    var timer=setTimeout(function(){
-      if(done)return; done=true; if(ac)ac.abort();
-      inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
-      errEl.textContent='응답 시간 초과. 다시 시도하세요.';
-    },10000);
-    var opt={cache:'no-store'}; if(ac) opt.signal=ac.signal;
-    fetch(CONFIG.reportPostUrl+'?token='+encodeURIComponent(token),opt)
-      .then(function(res){return res.json();})
-      .then(function(data){
-        if(done)return; done=true; clearTimeout(timer);
-        if(data&&data.ok){
-          S.adminAuth=token; ov.remove(); setView('admin');
-        } else {
-          inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
-          errEl.textContent='토큰이 올바르지 않습니다.'; inp.select();
-        }
-      })
-      .catch(function(){
-        if(done)return; done=true; clearTimeout(timer);
+    sha256hex(token).then(function(hex){
+      if(hex===CONFIG.adminTokenHash){
+        S.adminAuth=token; ov.remove(); setView('admin');
+      } else {
         inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
-        errEl.textContent='서버 연결에 실패했습니다. 잠시 후 다시 시도하세요.';
-      });
+        errEl.textContent='토큰이 올바르지 않습니다.'; inp.select();
+      }
+    }).catch(function(){
+      inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
+      errEl.textContent='오류가 발생했습니다. 다시 시도하세요.';
+    });
   }
   okBtn.addEventListener('click',tryToken);
   inp.addEventListener('keydown',function(ev){if(ev.key==='Enter')tryToken();});
