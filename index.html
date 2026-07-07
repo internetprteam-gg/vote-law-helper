@@ -1,683 +1,706 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>경기도청 홍보업무 선거법 도우미</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-:root {
-  --ink: #1A1C20;
-  --sub: #575E6B;
-  --faint: #9096A1;
-  --line: #E7E9EC;
-  --line-strong: #D8DBDF;
-  --bg: #F7F8F9;
-  --surface: #FFFFFF;
-  --navy: #16408F;
-  --navy-deep: #0E3070;
-  --navy-soft: #EFF3FA;
-  --ok: #1C7A43;
-  --ok-bg: #F1F8F3;
-  --ok-line: #CDE5D5;
-  --no: #B3324B;
-  --no-bg: #FBF2F4;
-  --no-line: #EBD0D6;
-  --warn: #7A621F;
-  --warn-bg: #FBF7EC;
-  --warn-line: #EBDFBC;
-  --radius: 10px;
-  --radius-sm: 8px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{-webkit-text-size-adjust:100%;}
-body{font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.6;letter-spacing:-.01em;}
-button{font-family:inherit;letter-spacing:inherit;}
-
-/* 헤더 */
-header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;}
-.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:baseline;justify-content:space-between;height:56px;padding:0 24px;align-items:center;}
-.logo{font-size:15px;font-weight:700;letter-spacing:-.02em;}
-.logo small{color:var(--faint);font-weight:400;font-size:12.5px;margin-left:10px;}
-.header-version{color:var(--faint);font-size:12px;font-variant-numeric:tabular-nums;}
-@media(max-width:640px){.logo small{display:none;}}
-
-/* 컨테이너 */
-.container{max-width:960px;margin:0 auto;padding:0 24px 64px;}
-
-/* 히어로 */
-.hero{padding:56px 0 40px;border-bottom:1px solid var(--line);margin-bottom:36px;}
-.hero-tag{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:14px;}
-.hero h1{font-size:27px;font-weight:700;line-height:1.45;letter-spacing:-.03em;margin-bottom:12px;}
-.hero p{font-size:14.5px;color:var(--sub);line-height:1.75;max-width:520px;}
-.hero-actions{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap;}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:background-color .15s,border-color .15s,color .15s;}
-.btn-primary{background:var(--navy);color:#fff;}
-.btn-primary:hover{background:var(--navy-deep);}
-.btn-outline{background:var(--surface);color:var(--ink);border-color:var(--line-strong);}
-.btn-outline:hover{border-color:var(--faint);}
-
-/* 유의사항 카드 3개 */
-.notice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:44px;}
-@media(max-width:720px){.notice-grid{grid-template-columns:1fr;}}
-.notice-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;cursor:pointer;transition:border-color .15s;text-align:left;}
-.notice-card:hover{border-color:var(--navy);}
-.notice-card h3{font-size:14px;font-weight:700;margin-bottom:8px;letter-spacing:-.02em;}
-.notice-card p{font-size:13px;color:var(--sub);line-height:1.65;}
-.notice-more{font-size:12.5px;color:var(--navy);font-weight:600;margin-top:14px;}
-
-/* 섹션 제목 */
-.section-head{margin-bottom:14px;}
-.section-head h2{font-size:16px;font-weight:700;letter-spacing:-.02em;}
-.section-head p{font-size:13px;color:var(--faint);margin-top:2px;}
-
-/* 검색 */
-.search-row{display:flex;gap:8px;margin-bottom:14px;}
-.search-input{flex:1;padding:12px 16px;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--radius-sm);font-size:14.5px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;color:var(--ink);}
-.search-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px var(--navy-soft);}
-.search-input::placeholder{color:var(--faint);}
-.btn-search{padding:12px 24px;background:var(--navy);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background-color .15s;}
-.btn-search:hover{background:var(--navy-deep);}
-
-/* 태그 필터 */
-.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px;align-items:center;}
-.tag-btn{padding:6px 13px;border-radius:100px;border:1px solid var(--line-strong);background:var(--surface);color:var(--sub);font-size:12.5px;font-weight:500;cursor:pointer;transition:border-color .15s,color .15s,background-color .15s;}
-.tag-btn:hover{border-color:var(--faint);color:var(--ink);}
-.tag-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-
-/* 검색 유도 / 빈 상태 */
-.search-prompt{text-align:center;padding:56px 20px;}
-.search-prompt h3{font-size:14.5px;font-weight:600;color:var(--sub);margin-bottom:6px;}
-.search-prompt p{font-size:13px;color:var(--faint);line-height:1.65;}
-.empty{text-align:center;padding:52px 20px;font-size:13.5px;color:var(--faint);line-height:1.8;}
-
-/* 로딩 */
-.loading{text-align:center;padding:48px 20px;color:var(--faint);font-size:13.5px;}
-.load-error{background:var(--no-bg);border:1px solid var(--no-line);border-radius:var(--radius);padding:18px 20px;text-align:left;max-width:480px;margin:0 auto;}
-.load-error strong{display:block;font-size:13.5px;color:var(--no);margin-bottom:6px;}
-.load-error span{font-size:12.5px;color:var(--sub);line-height:1.7;}
-
-/* 결과 카운트 */
-.result-info{font-size:13px;color:var(--faint);margin-bottom:12px;}
-.result-info b{color:var(--ink);font-weight:600;}
-
-/* 사례 아코디언 */
-.case-list{display:flex;flex-direction:column;gap:8px;}
-.case-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .15s;}
-.case-item.open{border-color:var(--navy);}
-.case-header{padding:16px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:14px;}
-.case-header:hover .case-q{color:var(--navy);}
-.case-header-body{flex:1;min-width:0;}
-.case-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;align-items:center;}
-.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:var(--bg);color:var(--sub);border:1px solid var(--line);}
-.case-q{font-size:14px;font-weight:500;line-height:1.55;transition:color .15s;}
-.case-arrow{color:var(--faint);flex-shrink:0;margin-top:4px;transition:transform .2s;width:16px;height:16px;}
-.case-item.open .case-arrow{transform:rotate(180deg);}
-
-/* 아코디언 본문 */
-.case-body{display:none;padding:2px 18px 20px;}
-.case-item.open .case-body{display:block;}
-.case-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);}
-.case-section:first-child{border-top:none;padding-top:0;margin-top:0;}
-.case-section-label{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;}
-.case-section-text{font-size:13.5px;color:var(--sub);line-height:1.8;}
-.case-doc{font-size:12px;color:var(--faint);margin-top:16px;padding-top:12px;border-top:1px solid var(--line);}
-
-/* ===== 결정트리 화면 ===== */
-.tree-header{display:flex;align-items:center;gap:12px;padding:24px 0 0;margin-bottom:32px;}
-.btn-back{padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--line-strong);background:var(--surface);font-size:12.5px;font-weight:500;cursor:pointer;color:var(--sub);transition:border-color .15s,color .15s;}
-.btn-back:hover{border-color:var(--faint);color:var(--ink);}
-.tree-header-label{font-size:12.5px;color:var(--faint);}
-.progress-label{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:10px;font-variant-numeric:tabular-nums;}
-.tree-q{font-size:21px;font-weight:700;letter-spacing:-.03em;line-height:1.4;margin-bottom:6px;}
-.tree-sub{font-size:13.5px;color:var(--faint);margin-bottom:24px;}
-.tree-options{display:grid;gap:8px;}
-.tree-opt{padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);cursor:pointer;transition:border-color .15s;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;}
-.tree-opt:hover{border-color:var(--navy);}
-.tree-opt-label{font-size:14.5px;font-weight:600;}
-.tree-opt-desc{font-size:12.5px;color:var(--faint);margin-top:3px;line-height:1.5;}
-.tree-opt-arrow{color:var(--faint);flex-shrink:0;width:16px;height:16px;transition:color .15s;}
-.tree-opt:hover .tree-opt-arrow{color:var(--navy);}
-
-/* ===== 결과 화면 ===== */
-.result-context{font-size:13px;color:var(--faint);margin-bottom:18px;}
-.result-context span{color:var(--ink);font-weight:600;}
-.result-context i{font-style:normal;margin:0 6px;color:var(--line-strong);}
-.result-notice{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:var(--radius-sm);padding:16px 20px;margin-bottom:20px;}
-.result-notice-title{font-size:13.5px;font-weight:700;margin-bottom:4px;}
-.result-notice-text{font-size:13px;color:var(--sub);line-height:1.7;}
-
-/* ===== 팝업 모달 (유의사항) ===== */
-.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,22,26,.45);z-index:200;align-items:center;justify-content:center;padding:20px;}
-.modal-backdrop.open{display:flex;}
-.modal{background:var(--surface);border-radius:14px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;}
-.modal-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--surface);z-index:1;}
-.modal-header h2{font-size:15.5px;font-weight:700;letter-spacing:-.02em;}
-.modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--faint);line-height:1;padding:2px;transition:color .15s;}
-.modal-close:hover{color:var(--ink);}
-.modal-body{padding:22px 24px 28px;}
-.modal-period{font-size:12.5px;font-weight:700;color:var(--navy);padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--line);}
-.modal-period:not(:first-child){margin-top:28px;}
-.modal-group{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;}
-.modal-group-head{padding:11px 16px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.modal-group-head::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.modal-group.ok .modal-group-head{color:var(--ok);background:var(--ok-bg);border-bottom:1px solid var(--ok-line);}
-.modal-group.ok .modal-group-head::before{background:var(--ok);}
-.modal-group.no .modal-group-head{color:var(--no);background:var(--no-bg);border-bottom:1px solid var(--no-line);}
-.modal-group.no .modal-group-head::before{background:var(--no);}
-.modal-group-item{padding:12px 16px;font-size:13px;line-height:1.7;color:var(--sub);}
-.modal-group-item+.modal-group-item{border-top:1px solid var(--line);}
-.modal-group-item strong{color:var(--ink);font-weight:600;}
-
-/* 공통 안내문 */
-.disclaimer{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius-sm);padding:14px 18px;font-size:12.5px;color:var(--warn);line-height:1.7;margin-top:24px;}
-.disclaimer strong{font-weight:700;}
-.result-actions{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;}
+  :root{
+    --navy:#16408F; --navy-deep:#0E3070; --sidebar:#0F1B33; --accent-line:#7FA8F0;
+    --ink:#191C22; --sub:#4E5560; --muted:#7C8290; --line:#E7EAEF; --line-soft:#EEF1F5;
+    --bg:#F4F6F9; --surface:#FFFFFF; --tint:#EEF3FB;
+    --ok-t:#166A3F; --ok-bg:#F0F7F2; --ok-bd:#CBE3D3;
+    --no-t:#A62B45; --no-bg:#FBF1F3; --no-bd:#EDCFD6;
+    --warn-t:#8A6A14; --warn-bg:#FBF6E9; --warn-bd:#EBDFBC;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--navy);text-decoration:none}
+  a:hover{color:var(--navy-deep)}
+  button,input,textarea{font-family:inherit}
+  *:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .cc-scroll::-webkit-scrollbar{width:11px;height:11px}
+  .cc-scroll::-webkit-scrollbar-thumb{background:#D3D8E0;border-radius:6px;border:3px solid transparent;background-clip:padding-box}
+  .cc-scroll::-webkit-scrollbar-thumb:hover{background:#B9C0CC;background-clip:padding-box;border:3px solid transparent}
+  mark{background:#DCE8FB;color:var(--ink);padding:0 1px;border-radius:3px}
+  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto !important}}
+  @media print{ .no-print{display:none !important} body,.cc-scroll{overflow:visible !important;height:auto !important} }
 </style>
 </head>
 <body>
-
-<header>
-  <div class="header-inner">
-    <div class="logo">경기도청 홍보업무 선거법 도우미 <small>공직선거법 질의회답 사례 검색 시스템</small></div>
-    <div class="header-version">v2.0.1</div>
-  </div>
-</header>
-
-<!-- ===== 홈 화면 ===== -->
-<div id="screen-home">
-<div class="container">
-
-  <div class="hero">
-    <div class="hero-tag">경기도청 정책홍보담당관</div>
-    <h1>선거법 질의회신 찾다 지치셨나요?<br>질의회답 사례를 바로 찾아보세요</h1>
-    <p>선관위 질의회답 사례를 바탕으로 안내해드립니다. 참고용이며 최종 판단은 반드시 선관위에 문의하세요.</p>
-    <div class="hero-actions">
-      <button class="btn btn-primary" onclick="showTree()">단계별 사례 찾기</button>
-      <button class="btn btn-outline" onclick="document.getElementById('search-section').scrollIntoView({behavior:'smooth'})">키워드로 검색</button>
-    </div>
-  </div>
-
-  <!-- 유의사항 3카드 -->
-  <div class="notice-grid">
-    <div class="notice-card" onclick="openNotice('d180')">
-      <h3>선거일 전 유의사항</h3>
-      <p>180일·60일 기준으로 달라지는 홍보물 발행·배부 및 행사 참석 제한사항을 확인하세요.</p>
-      <div class="notice-more">자세히 보기 →</div>
-    </div>
-    <div class="notice-card" onclick="openNotice('event')">
-      <h3>각종 행사 시 유의사항</h3>
-      <p>선거일 60일 전부터 적용되는 행사 개최·후원 가능 여부와 금지 유형을 확인하세요.</p>
-      <div class="notice-more">자세히 보기 →</div>
-    </div>
-    <div class="notice-card" onclick="openNotice('daily')">
-      <h3>일상 홍보 시 유의사항</h3>
-      <p>홈페이지·SNS·인쇄물 등 일상적인 홍보활동 시 상시 적용되는 주의사항을 확인하세요.</p>
-      <div class="notice-more">자세히 보기 →</div>
-    </div>
-  </div>
-
-  <!-- 검색 -->
-  <div id="search-section">
-    <div class="section-head">
-      <h2>키워드로 사례 검색</h2>
-      <p>행사, 위촉식, SNS, 성과홍보, 경품 등 관련 키워드를 입력하세요</p>
-    </div>
-    <div class="search-row">
-      <input class="search-input" type="text" id="search-input"
-        placeholder="예: 행사, 위촉식, 홍보대사, 공모전, SNS, 성과홍보"
-        oninput="onSearch()" onkeydown="if(event.key==='Enter')onSearch()">
-      <button class="btn-search" onclick="onSearch()">검색</button>
-    </div>
-  </div>
-
-  <!-- 태그 필터 -->
-  <div class="tag-row">
-    <button class="tag-btn active" onclick="filterTag(this,'all')">전체</button>
-    <button class="tag-btn" onclick="filterTag(this,'SNS')">SNS</button>
-    <button class="tag-btn" onclick="filterTag(this,'홈페이지·온라인')">홈페이지·온라인</button>
-    <button class="tag-btn" onclick="filterTag(this,'광고')">광고</button>
-    <button class="tag-btn" onclick="filterTag(this,'인쇄·홍보물')">인쇄·홍보물</button>
-    <button class="tag-btn" onclick="filterTag(this,'행사·이벤트')">행사·이벤트</button>
-  </div>
-
-  <div id="loading-indicator" class="loading">사례 데이터를 불러오는 중입니다&hellip;</div>
-  <div id="result-info" class="result-info"></div>
-  <div id="case-list"></div>
-
-</div>
-</div>
-
-<!-- ===== 결정트리 화면 ===== -->
-<div id="screen-tree">
-<div class="container">
-  <div class="tree-header">
-    <button class="btn-back" onclick="showHome()">← 처음으로</button>
-    <span class="tree-header-label">단계별 사례 찾기</span>
-  </div>
-  <div class="progress-label" id="prog"></div>
-  <div id="tree-content"></div>
-</div>
-</div>
-
-<!-- ===== 결과 화면 ===== -->
-<div id="screen-result">
-<div class="container">
-  <div class="tree-header">
-    <button class="btn-back" onclick="showHome()">← 처음으로</button>
-    <button class="btn-back" onclick="showTree()">다시 찾기</button>
-  </div>
-  <div id="result-content"></div>
-</div>
-</div>
-
-<!-- ===== 유의사항 팝업 ===== -->
-<div class="modal-backdrop" id="modal-notice" onclick="closeNotice(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="notice-title"></h2>
-      <button class="modal-close" onclick="closeNotice()" aria-label="닫기">&times;</button>
-    </div>
-    <div class="modal-body" id="notice-body"></div>
-  </div>
-</div>
+<div id="app" style="display:flex;height:100vh;overflow:hidden"></div>
 
 <script>
-// ===== 구글 Apps Script 연동 =====
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec';
-let CASES = [];
+"use strict";
+(function(){
 
-const CHEVRON = '<svg class="case-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>';
-const ARROW_RIGHT = '<svg class="tree-opt-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg>';
+/* ============================================================
+   CONFIG
+   - daysUntilElection: prototype-style abstract offset from today.
+     Set to the real number of days to the election in deployment.
+   - reportPostUrl: Google Apps Script doPost Web App URL for
+     회신 사례 제보. Leave '' to simulate submission locally.
+   ============================================================ */
+var CONFIG = {
+  electionName: '제9회 전국동시지방선거',
+  daysUntilElection: 120,
+  dataDate: '2026. 3. 18.',
+  sheetId: '19xSoIFRxA8HgRVKIitxp6MuRk_Gax_T85YtAz9FQGiQ',
+  reportPostUrl: 'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec'
+};
+var PHONE = '031-259-4876';
 
-async function loadCasesFromSheet() {
-  const loadingEl = document.getElementById('loading-indicator');
-  try {
-    const res = await fetch(APPS_SCRIPT_URL);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    CASES = data;
-    if (loadingEl) loadingEl.style.display = 'none';
-    renderCases();
-  } catch (e) {
-    console.error('시트 로드 실패:', e);
-    if (loadingEl) {
-      loadingEl.innerHTML = `
-        <div class="load-error">
-          <strong>데이터를 불러오지 못했습니다</strong>
-          <span>내부행정망에서 외부 접근이 차단된 것 같아요.<br>
-          오프라인 버전(v2.0.1)을 사용하거나 외부망에서 접속해주세요.</span>
-        </div>`;
-    }
-  }
-}
+/* ============================================================
+   CASE SNAPSHOT (embedded fallback — 36 real 질의회답 cases)
+   Source: 경기도선관위 질의회답 시트. Text kept verbatim.
+   ============================================================ */
+var SNAPSHOT = [
+{id:1,tags:['행사·이벤트'],searchTags:['행사','SNS','SNS홍보','기념품','경품'],question:'경기도가 온라인 발대식을 위한 사전 촬영에 참여하기 위하여 촬영 현장에 방문한 어린이 기자에게 경기도 명의로 기념품을 제공할 수 있는지?',answer:'경기도가 지방자치단체 업무추진비 집행에 관한 규칙 별포1 제2호 다목의 규정에 따라 발대식 사전 촬영(위촉장 수여)에 참여하기 위하여 공식적으로 방문한 어린이기자에게 경기도의 명의로 의례적인 수준의 기념품을 제공하는 것은 공직선거법 제11조제2항제4호가목의 규정에 따라 가능할 것입니다.',law:'공직선거법 제11조',docQ:'홍보미디어담당관-1144(2022.2.7.)',docA:'경기도선관위 지도1과-863(2022.2.10.)'},
+{id:2,tags:['행사·이벤트'],searchTags:['행사','기자단','인사말','축사'],question:'경기도지사 권한대행이 경기도 꿈나무기자단 온라인 발대식에 참석하여 인사말을 녹화하고 기자단 카페에 게시할 수 있는지?',answer:'경기도지사 권한대행자 등이 경기도 꿈나무기자단 발대식과 관련하여 의례적인 내용의 인사말을 녹화하고 해당 녹화영상을 경기도가 운영하는 ‘기자단 카페’에 게시하는 것만으로는 공직선거법에 위반되지 않을 것입니다.',law:'해당없음',docQ:'홍보미디어담당관-1226(2022.2.8.)',docA:'경기도선관위 지도1과-929(2022.2.14.)'},
+{id:3,tags:['행사·이벤트','홈페이지·온라인'],searchTags:['행사','온라인행사','행사홍보','SNS','홈페이지','이벤트'],question:'경기도 뉴스포털’ 홍보 및 특집기사 인지도 제고를 위하여 이벤트를 실시하고 참여자에게 경품을 제공할 수 있는지?',answer:'경기도 뉴스포털 누리집’ 홍보 및 특집기사 인지도 제고를 위하여 경기도 인터넷시스템 설치 및 운영에 관한 조례에 따라 경품을 제공하는 것은 공직선거법 상 가능할 것입니다. 다만, 경기도지사(경기도지사 권한대행자 포함)의 직, 성명을 밝히거나 그가 하는 것으로 추정할 수 있는 방법으로 제공하는 경우에는 행위양태에 따라 같은 법 제113조 또는 제114조에 위반될 것입니다.',law:'공직선거법 제113조, 제114조',docQ:'홍보미디어담당관-4332(2022.5.11.)',docA:'경기도선관위 지도1과-2323(2022.5.18.)'},
+{id:4,tags:['행사·이벤트','홈페이지·온라인'],searchTags:['행사','온라인행사','행사홍보','SNS','SNS홍보','홈페이지','이벤트','공모'],question:'각 지자체에서 통상적으로 운영하고 있는 열린시장(도지사)실과 동일한 형태의 경기도지사 누리집의 새로운 이름을 공모하기 위하여 경기도민을 대상으로 실시하는 네이밍(명칭) 공모전을 SNS, 보도자료 등으로 홍보하는 것이 가능한지?',answer:'경기도가 열린도지사실 네이밍 공모전 행사를 안내하는 범위 내에서 SNS 등을 통하여 홍보하는 것은 공직선거법 제86조제5항제4호 및 공직선거관리규칙 제47조제4항 제3호, 제4호의 규정에 따라 가능할 것입니다.',law:'공직선거법 제86조, 공직선거관리규칙 제47조',docQ:'홍보미디어담당관-4778(2022.5.26.)',docA:'경기도선관위 지도1과-2509(2022.5.28.)'},
+{id:5,tags:['홈페이지·온라인'],searchTags:['홈페이지','홍보'],question:'경기도지사 직무 개시 후 대도민 공개될 열린도지사실 누리집에 도지사 당선인 신분 기간 내 동정(활동사항)을 게재해두는 것이 가능한지?',answer:'지방자치단체 홈페이지의 특정란에 지방자치단체장 당선인의 통상적인 활동사항을 게시하는 것은 공직선거법에 위반되지 아니할 것이나, 통상적 범위를 넘어 당선자에 대한 선전에 이르는 내용을 게시할 경우 행위양태에 따라 같은 법 제60조, 제86조에 위반될 수 있을 것입니다.',law:'공직선거법 제60조, 제86조',docQ:'홍보미디어담당관-5256(2022.6.10.)',docA:'경기도선관위 지도1과-2830(2022.6.16.)'},
+{id:6,tags:['행사·이벤트','홈페이지·온라인'],searchTags:['홈페이지','홍보','기자단','행사','도지사 참석'],question:'경기도 도민기자단의 민선8기 취임행사 현장 취재 및 기사발행이 가능한지?',answer:'경기도 도민기자단이 민선8기 취임행사를 취재하고 그 기사를 지방자치단체의 홈페이지(네이버 블로그 등을 포함)의 특정메뉴에 게시하거나 언론사에 보도자료를 제공하는 것은 공직선거법에 위반되지 아니할 것이나, 업적을 홍보하는 등 선거운동이나 선거에 영향을 미치는 행위에 이르지 않도록 유의하여야 할 것임',law:'공직선거법 제86조',docQ:'홍보미디어담당관-5296(2022.6.13.)',docA:'경기도선관위 지도1과-2904(2022.6.21.)'},
+{id:7,tags:['행사·이벤트','홈페이지·온라인'],searchTags:['홈페이지','홍보','기자단','행사','도지사 참석'],question:'도지사가 경기도민기자단과의 소통 간담회를 갖고 인사말 및 도정을 설명하고, 기자단과 질의응답을 가지며 기자단의 의견을 수렴하는 행위를 하는 것이 가능한지? 또, 도민기자단 간담회 개최 상황을 경기도 홈페이지 ‘소셜방송 LIVE경기’를 통해 실시간으로 송출하고, 도 홈페이지, 블로그 등에 기사를 게재할 수 있는지?',answer:'경기도가 경기도민가자단 간담회를 개최하면서 경기도 공식 홈페이지 내 특정 메뉴에서 생중계하거나 도민기자단이 취재한 관련 기사를 홈페이지(블로그 포함)에 게시하는 것만으로는 공직선거법에 위반되지 아니할 것이나, 경기도지사의 업적을 홍보하는 등 선거운동이나 선거에 영향을 미치는 행위에 이르지 않도록 유의하여야 할 것임',law:'공직선거법 제86조',docQ:'홍보미디어담당관-5479(2022.6.20.)',docA:'경기도선관위 지도1과-2913(2022.6.22.)'},
+{id:8,tags:['행사·이벤트','인쇄·홍보물'],searchTags:['브랜드','기념품','경품'],question:'경기도 브랜드 기념품을 도민에게 제공할 수 있는지?',answer:'경기도가 자체 사업계획과 예산으로 법령(중앙행정기관이 법령에 따라 수립, 시달한 지침 포함)이나 대상, 방법, 범위 등을 구체적으로 정한 경기도의 조례에 근거하여 그 명의로 경기도 대표상징물이나 도정슬로건이 표기된 경기도 브랜드 홍보물품을 기념품으로 제공하는 것이라면 공직선거법 제112조제2항제4호 가목 또는 나목에 따라 가능할 것이나, 그 범위를 벗어나 제공하거나 경기도지사의 직, 성명을 밝히거나 그가 하는 것으로 추정할 수 있는 방법으로 제공하는 경우에는 행위양태에 따라 같은 법 제113조 또는 제114조에 위반될 것입니다.',law:'공직선거법 제113조, 제114조',docQ:'홍보콘텐츠담당관-5351(2022.6.30.)',docA:'경기도선관위 지도1과-3224(2022.7.8.)'},
+{id:9,tags:['SNS','행사·이벤트'],searchTags:['행사','SNS','행사홍보','SNS홍보','기념품','경품'],question:'경기도가 벚꽃축제를 개최하고 X배너를 설치하여 경기도 카톡채널을 친구 추가한 사람에게 기념품을 제공할 수 있는지?',answer:'경기도가 실시하는 벚꽃축제는 「경기도 도민 소통 활성화에 관한 조례」제7조제1항에 따른 행사로 볼 수 없을 것이며, 동 조례 같은 제2항에 따르면 참여횟수, 실적 등 기여도를 고려하여 기념품 등을 제공할 수 있으므로 귀문과 같이 단순히 경기도 카카오톡 채널을 추가한 선거구민에게 기념품을 제공하는 경우에는 행위양태에 따라 「공직선거법」제113조 또는 제114조에 위반될 것입니다.',law:'공직선거법 제113조, 제114조',docQ:'정책홍보담당관-2687(2023.3.13.)',docA:'경기도선관위 지도1과-891(2023.3.16.)'},
+{id:10,tags:['SNS','행사·이벤트'],searchTags:['행사','SNS','SNS홍보','기념품','경품'],question:'경기도가 도 부서 및 공공기관, 그 소속 직원(공무원, 공무직, 기간제근로자, 공공기관 임직원)에게 포상금 등의 인센티브를 지급할 수 있다는 조항을 담아 조례를 개정할 수 있는지?',answer:'조례의 제개정의 타당성에 관한 질의회답은 선거관리위원회 소관이 아니므로 회신이 어려우나, 경기도가 자체 사업계획과 예산으로 대상･방법･범위 등을 구체적으로 정한 조례에 따라 금품을 제공하는 것은 「공직선거법」제112조 제2항 제4호 나목에 따라 가능할 것임. 단 경기도가 표창･포상하는 경우 소속 공무원에 대하여 종전의 관례에서 벗어나지 아니하는 범위 안에서 부상(포상금 등 포함. 이하 같음)을 수여하는 외에 일반 선거구민에게 부상을 수여할 수 없을 것입니다.',law:'공직선거법 제112조',docQ:'정책홍보담당관-3819(2023.4.12.)',docA:'경기도선관위 지도1과-1197(2023.4.18.)'},
+{id:11,tags:['홈페이지·온라인','행사·이벤트'],searchTags:['행사','발대식','기자단','기회기자단'],question:'기회기자단 발대식에 도지사 참석이 가능한지, 기자단이 향후 현장을 취재한 내용을 게시할 수 있는지?',answer:'선거일 60일부터 선거일에 해당되지 않는 경우에는 도지사 참석과 기사 게시가 가능하나, 선거일전 60일부터 선거일까지는 「공직선거법」제86조 제2항 제4호 각 목에 규정된 경우를 제외하고는 각종 행사를 개최하거나 후원할 수 없는 바, 해당기간에 기회기자단 위촉식을 개최하는 경우에는 같은 법 같은 조에 위반',law:'공직선거법 제86조',docQ:'도민소통담당관-392(2024.1.9.)',docA:'경기도선관위 지도1과- 208(2024.1.12.)'},
+{id:12,tags:['인쇄·홍보물','행사·이벤트'],searchTags:['도정소식지','소식지','나의경기도'],question:'도정소식지 독자참여 코너에서 독자(도민)을 초청해 식사를 제공할 수 있는지?',answer:'경기도가 「공직선거법」제86조 제2항에 의한 선거일전 60일부터 선거일까지의 기간이 아닌 때에 「경기도 도정소식지 발행 조례」제9조에 의한 도민 또는 도정소식지 독자의 도정에 대한 관심을 높이기 위하여 독자참여 이벤트를 실시하고 추첨을 통해 당첨된 자에게 급부와 반대급부간 균형을 벗어나지 않는 범위에서 현금 또는 상품권에 상응하는 식사를 제공하는 것은 같은 법 제112조 제2항 제4호 나목에 따라 가능할 것입니다. 다만, 경기도지사의 직･성명을 밝히거나 그가 하는 것으로 추정되는 방법으로 제공하는 경우에는 행위양태에 따라 같은 법 제113조 또는 제114조에 위반',law:'공직선거법 제86조',docQ:'도민소통담당관-1781(2024.2.16.)',docA:'경기도선관위 지도1과-359(2024.2.21.)'},
+{id:13,tags:['광고'],searchTags:['광고제작','광고'],question:'주요 정책 홍보물을 제작하고 광고함에 있어 가능한 것과 불가능한 것은 무엇인지?',answer:'도민의 일상생활에 필요한 정보를 제공하기 위하여 홍보물을 제작하고 매체를 이용하여 홍보하는 것은 「공직선거법」제86조 제5항 제4호 및 「공직선거관리규칙」제47조 제4항 제4호에 따라 가능하지만, 주민의 일상생활에 필요한 정보제공의 범위를 벗어나 경기도의 사업계획･추진실적 그 밖에 활동상황을 알리기 위한 홍보물에 해당할 경우 경기도가 개설･운영하는 홈페이지 또는 유튜브(‘알림’기능 제외) 채널에 홍보물을 게시하는 외에 경기도가 개설･운영하는 SNS, 그 밖에 TV, 라디오, G버스, 아파트 미디어보드 등에 게시･방송하는 경우에는 같은 법 제86조 제5항에 따른 분기별 1종 1회로 발행･배부 또는 방송이 제한되는 홍보물에 해당',law:'공직선거법 제86조',docQ:'도민소통담당관-1957(2024.2.23.)',docA:'경기도선관위 지도1과-1040(2024.2.28.)'},
+{id:14,tags:['행사·이벤트'],searchTags:['행사','공모전','시상금','경품'],question:'경기도가 공모전 시상식을 통해 입상한 수상자에게 상장을 수여하고 부상(시상금 포함)을 제공할 수 있는지?',answer:'경기도가 업무에 직접적･구체적으로 활용할 목적으로 공모전을 개최하고 공모전 입상자에게 경기도의 명의로 상장 및 통상적인 범위의 부상(시상금 포함)을 제공하는 것은 역무에 대한 대가 제공으로 보아 「공직선거법」제112조 제2항 제4호 차목에 따라 가능할 것입니다. 다만, 경기도지사가 직접 주거나 경기도지사의 직명 또는 성명을 밝히는 등 그가 하는 것으로 추정할 수 있는 방법으로 제공하는 경우에는 행위양태에 따라 같은 법 제113조 또는 제114조에 위반될 것임.',law:'공직선거법 제112조, 제113조, 제114조',docQ:'정책홍보담당관-3062(2024.3.26.)',docA:'경기도선관위 지도1과-1573(2024.3.29.)'},
+{id:15,tags:['홈페이지·온라인'],searchTags:['홈페이지','공약'],question:'홈페이지 초기화면에 도지사의 공약추진현황을 표기할 수 있는지?',answer:'경기도가 경기도지사의 공약추진현황을 객관적으로 평가하고 그 결과를 경기도가 개설한 대표 홈페이지에 귀문과 같이 게시하는 것은 「공직선거법」상 가능. 다만, 경기도지사의 업적을 홍보하거나 선거에 영향을 미치는 내용이 부가되는 경우에는 행위양태에 따라 같은 법 제9조, 제60조, 제85조, 제86조, 제254조에 위반될 것',law:'공직선거법 제9조, 제60조, 제86조, 제254조',docQ:'도민소통담당관-4306(2024.5.3.)',docA:'경기도선관위 지도1과-2336(2024.5.9.)'},
+{id:16,tags:['행사·이벤트'],searchTags:['행사'],question:'경기도가 경기도지사가 참석하는 주요 도정현장 방문행사를 통해 도민 의견 청취, 사업 추진상황 점검 등을 실시할 수 있는지?',answer:'경기도지사가 선거와 무관하게 민선8기 3년차를 맞이하여 도정현장 점검 및 정책 관련 도민의견 청취 등을 위해 도정현장을 방문하는 것은 직무상 행위로서 「공직선거법」상 가능할 것입니다. 다만, 행사 진행과정에서 경기도지사의 업적을 홍보하거나 지지·선전하는 등 선거에 영향을 미치는 행위가 부가되지 않도록 유의하여야 할 것입니다.',law:'공직선거법 제86조',docQ:'정책홍보담당관-5668(2024.6.14.)',docA:'경기도선관위 지도1과-2995(2024.6.19.)'},
+{id:17,tags:['SNS','홈페이지·온라인'],searchTags:['성과홍보','1종1회','1종1회 성과홍보','사진','도지사 사진'],question:'성과홍보 시 지사의 사진이 담긴 홍보물이 발행될 수 있는지?',answer:'분기별 1회1종으로는 가능하나, 발행배부가 가능한 홍보물일지라도 경기도지사의 업적홍보에 이르거나 지사의 사진에 담긴 모습이 지자체의 대표자로서의 의례적인 참석모습이 아닌 도지사 개인의 적극적인 기여 또는 활동에 이르는 것으로 보일 경우에는 선거법 위반임',law:'공직선거법 제86조',docQ:'도민소통담당관-5809(2024.6.21.)',docA:'경기도선관위 지도1과-3159(2024.6.24.)'},
+{id:18,tags:['SNS','광고','행사·이벤트'],searchTags:['SNS','SNS홍보','통큰세일','공공기관'],question:'경기도 공공기관이 주최하는 행사를 홍보할 수 있는지?',answer:'경기도가 운영하는 공식 SNS에 공공기관이 주최하는 행사를 단순히 알리는 것은 「공직선거법」상 가능하지만, 주최기관을 명시하였더라도 표현 방법･내용 등을 종합적으로 고려하여 볼 때 경기도가 하는 것으로 추정할 수 있는 방법으로 홍보하거나 경기도와 공동으로 개최하는 것으로 볼 수 있는 경우에는 행위양태에 따라 같은 법 제113조 내지 제115조에 위반될 수 있을 것이며, 도민의 일상생활에 필요한 정보제공의 범위를 벗어나 경기도의 사업계획･추진실적 그 밖에 활동상황(경기도지사의 성명･사진･활동상황･공약실천사항 기타 업적 포함)이 포함된 홍보물을 SNS를 통하여 홍보하는 경우에는 같은 법 제86조 제5항에 따라 분기별 1종 1회로 제한될 것',law:'공직선거법 제86조',docQ:'도민소통담당관-8561(2024.9.9.)',docA:'경기도선관위 지도1과-4162(2024.9.13.)'},
+{id:19,tags:['SNS','행사·이벤트'],searchTags:['이벤트','이벤트경품','경품','기념품'],question:'민간기업에서 후원한 물품을 이벤트 참여자에게 경품으로 제공할 수 있는지?',answer:'귀문의 경우 경기도가 도민과의 소통 활성화를 위하여 「경기도 도민 소통 활성화에 관한 조례」제7조 제1항 각 호에 규정된 행사를 실시하고 같은 조례 제7조 제2항에 따라 참여횟수･실적 등 도민의 소통활성화 기여도 등을 고려하여 참여한 도민에게 경품을 제공하는 경우라면 「공직선거법」제112조 제2항 제4호 나목에 따라 가능. 다만, 동 조례의 범위를 벗어나 단순 참여자에게 제공하거나 경기도지사의 직･성명을 밝히는 등 그가 하는 것으로 추정되는 방법으로 제공하는 경우에는 행위양태에 따라 같은 법 제113조 내지 제115조에 위반될 수 있을 것',law:'공직선거법 제112조, 제113조, 제115조',docQ:'도민소통담당관-8561(2024.9.9.)',docA:'경기도선관위 지도1과-4162(2024.9.13.)'},
+{id:20,tags:['SNS','홈페이지·온라인'],searchTags:['홈페이지','정책비교','정책','중앙정부'],question:'지방자치단체가 ‘정부’ 또는 ‘중앙’ 등 표현을 이용하여 정부에서 시행중인 정책과 지자체가 시행중인 정책을 비교하는 홍보물을 제작하여 배포할 수 있는지?',answer:'지방자치단체가 ‘정부’ 또는 ‘중앙’이라는 표현을 사용하는 것만으로는 「공직선거법」상 제한되지 않을 것. 지방자치단체가 개설한 인터넷 홈페이지에 지방자치단체의 사업계획·추진실적 기타 지방자치단체의 활동상황 등을 게시하는 것은 의례적·직무상의 행위로서 「공직선거법」상 가능할 것입니다. 다만, 지방자치단체장의 업적을 홍보하거나 선거에 영향을 미치는 내용이 부가되는 경우에는 행위양태에 따라 같은 법 제9조, 제60조, 제85조, 제86조, 제254조에 위반될 것',law:'공직선거법 제9조, 제60조, 제86조, 제254조',docQ:'도민소통담당관-1670(2025.2.19.)',docA:'경기도선관위 지도1과-747(2025.2.25.)'},
+{id:21,tags:['행사·이벤트'],searchTags:['행사','위촉식','홍보대사'],question:'경기도 홍보대사 위촉식에 도지사가 참석하여 위촉장을 수여하는 등의 행위를 할 수 있는지?',answer:'지방자치단체가 직무의 일환으로 「경기도 홍보대사 운영에 관한 조례」에 따라 위촉 대상자에게 위촉장을 수여하고, 해당 위촉식에 도지사가 참석하여 의례적인 인사말, 기념촬영 등을 하는 것은 제한되지 않을 것이나, 위촉식 과정에서 도지사의 업적을 홍보하거나 선거에 영향을 미칠 수 있는 행위가 부가되는 경우에는 행위주체 및 양태에 따라 같은 법 제9조, 제60조, 제86조, 제254조에 위반될 것임',law:'공직선거법 제9조, 제60조, 제86조, 제254조',docQ:'정책홍보담당관-2528(2025.3.19.)',docA:'경기도선관위 지도1과-3347(2025.3.24.)'},
+{id:22,tags:['SNS','홈페이지·온라인','인쇄·홍보물','행사·이벤트'],searchTags:['행사','위촉식','홍보대사'],question:'경기도 홍보대사 위촉식에 관련한 홍보를 할 수 있는지?',answer:'지방자치단체가 직무의 일환으로 실시한 홍보대사 위촉식에 관련한 보도자료를 언론사에 배포하거나 지방자치단체가 개설, 운영하고 있는 홈페이지, SNS 등에 게시하는 것만으로는 같은 법상 제한되지 않을 것이나, 지방자치단체의 사업계획, 추진실적, 그 밖에 지방자치단체의 활동상황을 알리는 내용이 부가되는 경우에는 같은 법 제86조 제5항에 따라 분기별 1종 1회로 발행, 배부가 제한되는 홍보물에 해당할 것임',law:'공직선거법 제86조',docQ:'정책홍보담당관-2528(2025.3.19.)',docA:'경기도선관위 지도1과-3347(2025.3.24.)'},
+{id:23,tags:['SNS','홈페이지·온라인'],searchTags:['홈페이지','성금 모금','재난','기억과연대','기억과 연대'],question:'경기도 관할을 벗어난 타 지자체 또는 국가에서 발생한 재난에 대하여 성금 모금을 위한 홍보물을 제작하여 게시할 수 있는지?',answer:'지방자치단체가 자연재난 성금 모금 홍보 이미지를 지방자치단체가 개설·운영하는 인터넷 홈페이지, SNS에 게시하는 것만으로는 「공직선거법」에 위반되지 않을 것이나, 직접적인 모금 주체가 되어 경기도가 소유한 계좌 등으로 후원받는 등의 행위는 「기부금품법」제5조 제1항에 따라 불가',law:'공직선거법 제86조, 기부금품법 제5조',docQ:'도민소통담당관-2824(2025.3.28.)',docA:'경기도선관위 지도1과-1129(2025.4.4.)'},
+{id:24,tags:['SNS','홈페이지·온라인'],searchTags:['성과홍보','1종1회','1종1회 성과홍보'],question:'홈페이지 내에 성과홍보를 위한 기획콘텐츠를 제작하여 게시할 수 있는지?',answer:'지방자치단체가 추진하는 사업의 지원대상, 지원금액, 신청방법 등 주민의 일상생활에 필요한 정보를 제공하기 위한 범위내에서 홍보물을 제작하여 귀문의 매체를 활용하여 홍보하는 것은 「공직선거법」 제86조 제5항 및 「공직선거관리규칙」 제47조 제4항 제4호에 따라 가능할 것이나, 카카오톡 채널알림 메시지를 활용하여 전송하는 경우에는 같은 법 제86조 제5항에 따라 분기별 1종 1회로 발행·배부가 제한되는 홍보물에 해당될 것이므로 카카오톡 메시지 발송을 분기별 1종 1회로 지정하여야 할 것임',law:'공직선거법 제86조',docQ:'도민소통담당관-3061(2025.4.2.)',docA:'경기도선관위 지도1과-1340(2025.4.14.)'},
+{id:25,tags:['행사·이벤트'],searchTags:['행사','기자단','기회기자단','인센티브','활동우수자'],question:'경기도가 운영하는 기자단에게 활동우수자를 대상으로 지방자치단체의 명의로 소정의 인센티브를 제공할 수 있는지?',answer:'지방자치단체가 「경기도 학생 및 도민 기자단 운영 조례」제7조에 따라 경기도 학생 및 도민 기자단 활동우수자에게 지방자치단체 명의로 소정의 인센티브를 제공하는 것은 「공직선거법」 제112조 제2항 제4호 나목에 따라 가능하나, 도지사의 명의로는 제공할 수 없음',law:'공직선거법 제86조',docQ:'도민소통담당관-3647(2025.4.21.)',docA:'경기도선관위 지도1과-1672(2025.4.29.)'},
+{id:26,tags:['광고','홈페이지·온라인','인쇄·홍보물'],searchTags:['광고제작'],question:'대북전단 살포 신고 안내를 홍보물로 제작하여 홍보할 수 있는지?',answer:'단순 살포에 대한 신고 접수를 받기 위한 목적으로는 가능할 것이나, 도민의 일상생활에 필요한 정보제공 및 재난관리·안전사고의 예방을 위한 범위를 벗어나 경기도의 사업계획·추진실적 그 밖에 활동상황 등을 알리기 위한 내용이 포함된 홍보물을 경기도가 개설·운영하는 홈페이지 또는 유튜브(‘알림’기능 설정 제외)에 게시하는 외에 G버스TV·SNS 등을 통해 홍보하는 경우에는 「공직선거법」제86조 제5항에 따라 분기별로 1종 1회로 발행·배부 또는 방송이 제한되는 홍보물에 해당될 것입니다.',law:'공직선거법 제86조',docQ:'도민소통담당관-5461(2025.6.24.)',docA:'경기도선관위 지도1과-2462(2025.7.1.)'},
+{id:27,tags:['광고'],searchTags:['옥외매체','GBUSTV','옥외광고'],question:'성과홍보를 G버스TV 등 매체를 통하여 방송할 수 있는지?',answer:'지방자치단체가 당해 지방자치단체의 사업계획·추진실적 그 밖에 지방자치단체의 활동상황을 알리기 위한 홍보물을 G버스TV 등 매체를 통하여 방송하는 것은 「공직선거법」 제86조 제5항에 따라 분기별 1종 1회로 발행·배부가 제한되는 홍보물에 해당될 것입니다.',law:'공직선거법 제86조',docQ:'도민소통담당관-7563(2025.8.25.)',docA:'경기도선관위 지도1과-3347(2025.9.2.)'},
+{id:28,tags:['행사·이벤트'],searchTags:['행사','맞손토크','함께그린페스티벌','함께그린','소통행사','소통','소상공인','푸드트럭'],question:'경기도가 주최하는 도민소통행사에 소상공인 장터, 푸드트럭 등을 운영할 수 있는지?',answer:'지방자치단체가 개최하는 행사에서 소상공인 등이 참가하여 상생장터, 푸드트럭 등을 운영하는 것은 공직선거법상 제한되지 않음',law:'공직선거법 제86조',docQ:'정책홍보담당관-8365(2025.9.19.)',docA:'경기도선관위 지도1과-3661(2025.9.29.)'},
+{id:29,tags:['SNS','행사·이벤트','광고','홈페이지·온라인','인쇄·홍보물'],searchTags:['행사홍보','행사','홍보','SNS','홈페이지','매체홍보'],question:'경기도가 주최하는 도민소통행사를 매체를 활용해 홍보할 수 있는지?',answer:'지방자치단체가 개최하는 행사를 안내하기 위하여 통상적인 범위에서 보도자료를 배포하거나 SNS 및 인쇄물, 녹음물, 녹화물 등을 통해 홍보하는 것은 가능할 것이나, 내용에 지방자치단체장의 성명, 사진 등이 게재되는 경우에는 공직선거법 제86조제5항의 분기별 1종 1회로 제한되는 홍보물에 해당될 것',law:'공직선거법 제86조',docQ:'정책홍보담당관-8365(2025.9.19.)',docA:'경기도선관위 지도1과-3661(2025.9.29.)'},
+{id:30,tags:['행사·이벤트'],searchTags:['행사','맞손토크','함께그린페스티벌','함께그린','위촉식','도지사 참석','참석'],question:'경기도가 주최하는 도민소통행사에 도지사가 참석하여 토크쇼를 진행할 수 있는지?',answer:'지방자치단체가 개최하는 행사에서 지방자치단체장이 도민소통을 위한 토크쇼를 개최하는 것만으로는 공직선거법상 제한되지 아니할 것이나, 과정에서 지방자치단체장의 업적홍보나 지지, 선전에 이르는 내용이 포함되는 경우에는 행위양태에 따라 같은 법 제9조, 제60조, 제85조, 제86조, 제254조 등에 위반될 수 있을 것임',law:'공직선거법 제9조, 제60조, 제85조, 제86조, 제254조',docQ:'정책홍보담당관-8365(2025.9.19.)',docA:'경기도선관위 지도1과-3661(2025.9.29.)'},
+{id:31,tags:['행사·이벤트'],searchTags:['행사','위촉식','체육대회','체육행사','도지사 참석','참석'],question:'경기도가 주최하는 도민소통행사에 도지사가 참석할 수 있는지?',answer:'지방자치단체가 개최하는 행사에서 지방자치단체장이 패션쇼, 지방자치 30주년 서명식, 홍보대사 위촉식, 기념촬영에 참여하거나 행사장을 순회하는 것은 제한되지 아니할 것임',law:'공직선거법 제86조',docQ:'정책홍보담당관-8365(2025.9.19.)',docA:'경기도선관위 지도1과-3661(2025.9.29.)'},
+{id:32,tags:['SNS','행사·이벤트','홈페이지·온라인'],searchTags:['행사','SNS','소통행사','행사홍보'],question:'경기도가 직원 소통 행사 종료 후 관련 사진 및 영상을 경기도지사 개인 SNS, 경기도 홍보대사 개인 SNS, 경기도청 마스코트 SNS 계정에 게시할 수 있는지?',answer:'지방자치단체 명의로 운영되는 SNS에 지방자치단체의 사업계획, 추진실적 그 밖에 지방자치단체의 활동상황을 알리는 경우에는 공직선거법 제86조제5항에 따라 분기별 1종 1회로 발행, 배부가 제한되는 홍보물에 해당될 것이며, 내용이 지방자치단체장의 업적홍보에 이르거나 선거에 영향을 미칠 수 있는 내용이 포함되는 경우에는 같은 법 제9조, 제60조, 제85조, 제86조 등에 위반될 것임',law:'공직선거법 제9조, 제60조, 제85조, 제86조',docQ:'정책홍보담당관-9035(2025.10.14.)',docA:'경기도선관위 지도1과-3661(2025.10.20.)'},
+{id:33,tags:['행사·이벤트'],searchTags:['행사','기념품','경품'],question:'경기도가 직원 소통 행사에 참석한 경기도 직원들을 대상으로 기념품 또는 경품 등을 제공할 수 있는지?',answer:'지방자치단체가 법령(중앙행정기관이 법령에 근거하여 수립, 시달한 지침 포함) 또는 대상, 방법, 범위 등을 구체적으로 정한 당해 지방자치단체의 조례에 근거 없이 소속 직원을 대상으로 기념품, 경품 등을 제공하는 것은 행위양태에 따라 공직선거법 제113조 또는 제114조에 위반될 것임',law:'공직선거법 제113조, 제114조',docQ:'정책홍보담당관-9035(2025.10.14.)',docA:'경기도선관위 지도1과-3661(2025.10.20.)'},
+{id:34,tags:['행사·이벤트'],searchTags:['행사','위촉식','체육대회','체육행사','도지사 참석','참석'],question:'경기도지사가 경기도 직원들을 대상으로 소통(체육) 행사를 개최할 수 있는지?',answer:'지방자치단체가 지방자치단체장과 소속 직원간 소통 활성화를 위한 체육행사를 개최하는 것은 공직선거법상 가능할 것임',law:'공직선거법 제86조',docQ:'정책홍보담당관-9035(2025.10.14.)',docA:'경기도선관위 지도1과-3661(2025.10.20.)'},
+{id:35,tags:['SNS','행사·이벤트','홈페이지·온라인','광고','인쇄·홍보물'],searchTags:['행사','SNS','행사홍보','통큰세일','공공기관','SNS홍보'],question:'경기도가 공공기관(출연기관)이 출연금 또는 위탁사업비를 활용해 자체 추진하는 사업을 홍보할 수 있는지?',answer:'지방자치단체가 「공직선거관리규칙」 제47조제4항제4호·제5호에 해당하는 공공기관의 사업 내용을 지방자치단체 명의의 홈페이지, 유튜브 및 각종 매체를 통해 단순히 알리는 것만으로는 공직선거법에 위반된다고 볼 수 없음',law:'공직선거법 제9조, 제60조, 제85조, 제86조',docQ:'정책홍보담당관-9035(2025.10.14.)',docA:'경기도선관위 지도1과-3661(2025.10.20.)'},
+{id:36,tags:['SNS','행사·이벤트','홈페이지·온라인'],searchTags:['행사','SNS','행사홍보','통큰세일','공공기관','SNS홍보'],question:'경기도가 공공기관(출연기관)이 출연금 또는 위탁사업비를 활용해 자체 추진하는 사업을 홍보할 때 경기도의 로고(슬로건)을 사용할 수 있는지?',answer:'이 경우 홍보물에 경기도의 로고(슬로건 등)나 기관 이미지를 게재하는 것만으로 같은 법상 제한은 없을 것이나, 경기도가 운영하는 홈페이지, 유튜브(알림 기능 제외) 외의 홍보매체에 경기도의 사업계획, 추진실적, 그 밖에 활동상황을 포함하는 내용이 게재되는 경우에는 같은 법 제86조제5항에 따른 분기별로 1종 1회로 발행, 배부가 제한되는 홍보물에 해당할 것임. 아울러, 공공기관의 사업이 법령(중앙행정기관이 관련 법령에 근거하여 수립·시달한 지침 포함) 또는 대상·방법·범위 등을 구체적으로 정한 당해 지방자치단체의 조례에 근거없이 금품 등을 제공하는 경우 공공기관의 명의를 밝히더라도 홍보물의 표현 방법･내용 등을 종합적으로 고려하여 볼 때 지방자치단체가 사업을 추진하는 것으로 추정되거나, 지방자치단체와 공공기관이 공동으로 사업을 추진하는 것으로 볼 수 있는 경우(경기도 로고·슬로건 포함 등)에는 행위양태에 따라 법 제113조 내지 제115조에 위반될 수 있을 것임',law:'공직선거법 제86조, 제113조, 제115조',docQ:'정책홍보담당관-2357(2026.3.9.)',docA:'경기도선관위 지도1과-1289(2026.3.18.)'}
+];
 
-const NOTICE_DATA = {
-  d180: {
-    title: '선거일 전 유의사항',
-    sections: [
-      {
-        period: '선거일 전 180일부터 적용 (공직선거법 제86조제5항·제6항)',
-        ok: [
-          '도지사 직·성명이 포함된 의례적 초청장을 제한된 범위의 자에게 발송하는 행위',
-          '법령에 의해 발행·배부하는 홍보물에 도지사 성명·사진이 게재된 의례적 인사말을 게재하는 행위',
-          '도 명의 유튜브 채널에 <strong>알림 기능 미설정</strong>으로 도지사 출연 영상을 게시하는 행위',
-        ],
-        no: [
-          '사업계획·활동상황 홍보 녹화물을 관할구역 운행 버스에서 방송하는 행위',
-          '근무시간 중 공공기관이 아닌 단체 주최 행사(청사 개최 포함)에 도지사가 참석하는 행위',
-          '공공기관 행사라도 직원체육대회·등산대회 등 내부 행사에 근무시간 중 참석하는 행위',
-        ]
-      },
-      {
-        period: '선거일 전 60일부터 적용 (공직선거법 제86조제2항)',
-        ok: [
-          '법령에 의하여 개최·후원하도록 규정된 행사를 개최·후원하는 행위',
-          '특정일·특정시기에 개최하지 않으면 목적 달성이 불가한 행사',
-          '국가유공자 위령제, 국경일 기념식, 각종기념일 규정에 의한 기념행사 개최·후원',
-          '읍·면·동 이상 행정구역 단위의 정기적인 종합주민체육대회·전래 고유축제 개최·후원',
-          '천재지변 기타 재해 구호·복구 행위',
-        ],
-        no: [
-          '교양강좌, 사업설명회, 공청회, 직능단체모임, 체육대회, 경로행사, 민원상담 등 각종 행사(온라인 포함) 개최·후원',
-          '통·리·반장 회의에 참석하는 행위 (재해·긴급민원 발생 시는 가능)',
-          '정당의 정강·정책을 선거구민 대상으로 홍보·선전하는 행위',
-          '개최·후원 금지행사에 후원명의(명칭)만을 제공하는 행위',
-        ]
-      }
-    ]
-  },
-  event: {
-    title: '각종 행사 시 유의사항',
-    sections: [
-      {
-        period: '행사에 관련된 사항은 선관위 질의회신을 받는 것이 좋습니다',
-        ok: [
-          '법령에 의하여 개최·후원하도록 규정된 행사',
-          '특정일·특정시기에 개최하지 않으면 목적 달성 불가한 행사 (농산물박람회, 도로개통식 등)',
-          '국가유공자 위령제, 국경일 기념식 등 각종기념일 규정에 따른 기념행사',
-          '법령·조례에 의해 주민 동의가 필요한 사업의 사업설명회',
-          '읍·면·동 이상 행정구역 단위 정기 종합주민체육대회 또는 전래 고유축제',
-          '직업지원교육 또는 유상 교양강좌 개최·후원, 주민자치센터 교양강좌 후원',
-          '정부가 주관하는 공공행사에 인력·시설·장비 지원',
-          '천재·지변 기타 재해 구호·복구 행위',
-        ],
-        no: [
-          '교양강좌, 사업설명회, 공청회, 직능단체모임, 체육대회, 경로행사, 민원상담 등 각종 행사 개최·후원',
-          '개최·후원 금지 행사에 후원명의(명칭)만 제공하는 행위',
-          '연초 포괄 보조금으로 지원받은 사회단체가 선거일 60일 이후 개최 행사에 해당 보조금을 지출하는 행위',
-          '지자체장이 계획적·반복적으로 읍·면·동을 순회하며 사업계획·추진실적 홍보',
-        ]
-      }
-    ]
-  },
-  daily: {
-    title: '일상 홍보 시 유의사항',
-    sections: [
-      {
-        period: '상시 적용 사항',
-        ok: [
-          '도 명의 홈페이지·유튜브에 도지사 통상 동정·행사 참석 등 도정 소식을 게시하는 행위 (<strong>단, 유튜브의 경우 알림 기능 미설정</strong>)',
-          '필요에 의해 홈페이지·SNS에 자연재난 성금 모금 홍보 이미지를 게시하는 행위(<strong>단, 안내만 가능하며, 후원 모금의 주체가 되서는 안 됨</strong>)',
-          '환경·의료·교통·조세·건축 등 민원안내서 또는 반상회보 등 주민 일상생활 정보 제공 홍보물',
-          '역사·지리·문화·특산물·관광명소 안내 홍보물',
-          '재난관리·안전사고 예방 홍보물',
-          '청사 입구·외벽·담장 게시 홍보물 (<strong>단, 도지사 직명 미게재</strong>)',
-          '공모전 개최 및 입상자에게 도 명의로 상장·통상적 부상 제공',
-        ],
-        no: [
-          '도지사 업적을 홍보하거나 선거에 영향을 미치는 내용 게시',
-          '<strong>분기별 1종 1회를 초과하여</strong> SNS·카카오톡 채널알림 등 알림 기능을 활용해 사업계획·추진실적 홍보물 발송',
-          '도지사 직·성명을 밝히거나 그가 하는 것으로 추정되는 방법으로 경품·기념품 제공',
-          '법령·조례 근거 없이 소속 직원에게 기념품·경품 제공',
-          '공공기관 명의를 밝혀도 경기도가 하는 것으로 추정되거나 공동 추진으로 보이는 방식으로 홍보',
-        ]
-      }
-    ]
-  }
+/* ===== 유의사항 (개요에 통합) — 브리프 §4 원문 그대로 ===== */
+var NOTICE = {
+  before: { blocks: [
+    { heading:'선거일 전 180일부터 적용', law:'공직선거법 제86조제5항·제6항', note:'',
+      ok:['도지사 직·성명이 포함된 의례적 초청장을 제한된 범위의 자에게 발송하는 행위','법령에 의해 발행·배부하는 홍보물에 도지사 성명·사진이 게재된 의례적 인사말을 게재하는 행위','도 명의 유튜브 채널에 알림 기능 미설정으로 도지사 출연 영상을 게시하는 행위'],
+      no:['사업계획·활동상황 홍보 녹화물을 관할구역 운행 버스에서 방송하는 행위','근무시간 중 공공기관이 아닌 단체 주최 행사(청사 개최 포함)에 도지사가 참석하는 행위','공공기관 행사라도 직원체육대회·등산대회 등 내부 행사에 근무시간 중 참석하는 행위'] },
+    { heading:'선거일 전 60일부터 적용', law:'공직선거법 제86조제2항', note:'',
+      ok:['법령에 의하여 개최·후원하도록 규정된 행사를 개최·후원하는 행위','특정일·특정시기에 개최하지 않으면 목적 달성이 불가한 행사','국가유공자 위령제, 국경일 기념식, 각종기념일 규정에 의한 기념행사 개최·후원','읍·면·동 이상 행정구역 단위의 정기적인 종합주민체육대회·전래 고유축제 개최·후원','천재지변 기타 재해 구호·복구 행위'],
+      no:['교양강좌, 사업설명회, 공청회, 직능단체모임, 체육대회, 경로행사, 민원상담 등 각종 행사(온라인 포함) 개최·후원','통·리·반장 회의에 참석하는 행위 (재해·긴급민원 발생 시는 가능)','정당의 정강·정책을 선거구민 대상으로 홍보·선전하는 행위','개최·후원 금지행사에 후원명의(명칭)만을 제공하는 행위'] },
+  ]},
+  event: { blocks: [
+    { heading:'', law:'', note:'행사에 관련된 사항은 선관위 질의회신을 받는 것이 좋습니다',
+      ok:['법령에 의하여 개최·후원하도록 규정된 행사','특정일·특정시기에 개최하지 않으면 목적 달성 불가한 행사 (농산물박람회, 도로개통식 등)','국가유공자 위령제, 국경일 기념식 등 각종기념일 규정에 따른 기념행사','법령·조례에 의해 주민 동의가 필요한 사업의 사업설명회','읍·면·동 이상 행정구역 단위 정기 종합주민체육대회 또는 전래 고유축제','직업지원교육 또는 유상 교양강좌 개최·후원, 주민자치센터 교양강좌 후원','정부가 주관하는 공공행사에 인력·시설·장비 지원','천재·지변 기타 재해 구호·복구 행위'],
+      no:['교양강좌, 사업설명회, 공청회, 직능단체모임, 체육대회, 경로행사, 민원상담 등 각종 행사 개최·후원','개최·후원 금지 행사에 후원명의(명칭)만 제공하는 행위','연초 포괄 보조금으로 지원받은 사회단체가 선거일 60일 이후 개최 행사에 해당 보조금을 지출하는 행위','지자체장이 계획적·반복적으로 읍·면·동을 순회하며 사업계획·추진실적 홍보'] },
+  ]},
+  daily: { blocks: [
+    { heading:'', law:'', note:'',
+      ok:['도 명의 홈페이지·유튜브에 도지사 통상 동정·행사 참석 등 도정 소식을 게시하는 행위 (단, 유튜브의 경우 알림 기능 미설정)','필요에 의해 홈페이지·SNS에 자연재난 성금 모금 홍보 이미지를 게시하는 행위 (단, 안내만 가능하며, 후원 모금의 주체가 되서는 안 됨)','환경·의료·교통·조세·건축 등 민원안내서 또는 반상회보 등 주민 일상생활 정보 제공 홍보물','역사·지리·문화·특산물·관광명소 안내 홍보물','재난관리·안전사고 예방 홍보물','청사 입구·외벽·담장 게시 홍보물 (단, 도지사 직명 미게재)','공모전 개최 및 입상자에게 도 명의로 상장·통상적 부상 제공'],
+      no:['도지사 업적을 홍보하거나 선거에 영향을 미치는 내용 게시','분기별 1종 1회를 초과하여 SNS·카카오톡 채널알림 등 알림 기능을 활용해 사업계획·추진실적 홍보물 발송','도지사 직·성명을 밝히거나 그가 하는 것으로 추정되는 방법으로 경품·기념품 제공','법령·조례 근거 없이 소속 직원에게 기념품·경품 제공','공공기관 명의를 밝혀도 경기도가 하는 것으로 추정되거나 공동 추진으로 보이는 방식으로 홍보'] },
+  ]},
 };
 
-let currentTag = 'all';
-let currentKw = '';
-let treeState = { step: 1, q1: null, q2: null };
-let openCaseId = null;
+var CHECKLIST = ['행위 주체 (누가)','행위 시기 (언제 · 선거일 전 며칠)','목적 (무엇을 위해)','방법 (어떤 방식으로)','대상 (누구에게)'];
 
-// ===== 화면 전환 =====
-function showHome() {
-  document.getElementById('screen-home').style.display = '';
-  document.getElementById('screen-tree').style.display = 'none';
-  document.getElementById('screen-result').style.display = 'none';
-}
-function showTree() {
-  treeState = { step: 1, q1: null, q2: null };
-  document.getElementById('screen-home').style.display = 'none';
-  document.getElementById('screen-tree').style.display = '';
-  document.getElementById('screen-result').style.display = 'none';
-  renderTree();
-}
-function showResult(cases, ctx) {
-  document.getElementById('screen-home').style.display = 'none';
-  document.getElementById('screen-tree').style.display = 'none';
-  document.getElementById('screen-result').style.display = '';
-  renderResult(cases, ctx);
-}
+/* ============================================================
+   STATE
+   ============================================================ */
+var CASES = SNAPSHOT.slice();
+var S = {
+  view: 'home',
+  activeTab: 'before',
+  calcInput: '',
+  homeQ: '',
+  cs: { q:'', filterTag:'전체', selectedId:1 },
+  q: { s:'', t:'', p:'', m:'', g:'' },
+  r: { q:'', a:'', date:'', law:'', contact:'', hp:'' },
+  reportStatus: 'idle',
+  copiedKey: null
+};
+var copyTimer = null;
 
-// ===== 유의사항 팝업 =====
-function openNotice(type) {
-  const d = NOTICE_DATA[type];
-  document.getElementById('notice-title').textContent = d.title;
-  let html = '';
-  d.sections.forEach(sec => {
-    html += `<div class="modal-period">${sec.period}</div>`;
-    html += `<div class="modal-group ok"><div class="modal-group-head">이런 경우는 가능해요</div>`;
-    sec.ok.forEach(t => html += `<div class="modal-group-item">${t}</div>`);
-    html += `</div>`;
-    html += `<div class="modal-group no"><div class="modal-group-head">이런 경우는 안 돼요</div>`;
-    sec.no.forEach(t => html += `<div class="modal-group-item">${t}</div>`);
-    html += `</div>`;
-  });
-  html += `<div class="disclaimer">행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있습니다. 최종 판단은 <strong>경기도선거관리위원회</strong>에 문의하세요.</div>`;
-  document.getElementById('notice-body').innerHTML = html;
-  document.getElementById('modal-notice').classList.add('open');
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
+function reduced(){ return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; }
+function days(){ var d=CONFIG.daysUntilElection; return (d==null)?120:d; }
+function elecDate(){ var d=new Date(); d.setHours(0,0,0,0); return new Date(d.getTime()+days()*86400000); }
+function fmt(d){ return d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+'.'; }
+function seg(dv){
+  if(dv<=0) return {key:'after',label:'선거일 이후',short:'선거 이후',tab:'daily'};
+  if(dv<=60) return {key:'d60',label:'선거일 전 60일 제한 기간',short:'60일 제한',tab:'before'};
+  if(dv<=180) return {key:'d180',label:'선거일 전 180일 제한 기간',short:'180일 제한',tab:'before'};
+  return {key:'normal',label:'상시(제한 없음) 기간',short:'상시',tab:'daily'};
 }
-function closeNotice(e) {
-  if (!e || e.target === document.getElementById('modal-notice'))
-    document.getElementById('modal-notice').classList.remove('open');
+function segColors(key){
+  if(key==='normal') return {bg:'var(--ok-bg)',bd:'var(--ok-bd)',tx:'var(--ok-t)',icon:'✓'};
+  if(key==='d180') return {bg:'var(--warn-bg)',bd:'var(--warn-bd)',tx:'var(--warn-t)',icon:'⚠'};
+  if(key==='d60') return {bg:'var(--no-bg)',bd:'var(--no-bd)',tx:'var(--no-t)',icon:'✕'};
+  return {bg:'var(--bg)',bd:'var(--line)',tx:'var(--sub)',icon:'·'};
 }
+function ddayText(){ var d=days(); return d>0?'D-'+d:(d===0?'D-DAY':'D+'+(-d)); }
+function core(c){ return {id:c.id,question:c.question,answer:c.answer,law:c.law,docQ:c.docQ,docA:c.docA,tags:c.tags||[],tagText:(c.tags||[]).join(' · ')}; }
 
-// ===== 사례 목록 =====
-function getFiltered() {
-  let list = CASES;
-  if (currentTag !== 'all') list = list.filter(c => c.tags.includes(currentTag));
-  if (currentKw) {
-    const kw = currentKw.toLowerCase();
-    list = list.filter(c =>
-      c.question.toLowerCase().includes(kw) ||
-      c.answer.toLowerCase().includes(kw) ||
-      c.searchTags.some(t => t.toLowerCase().includes(kw)) ||
-      c.tags.some(t => t.toLowerCase().includes(kw))
-    );
+/* highlight query matches inside text, returning escaped HTML */
+function hl(text,q){
+  text = String(text==null?'':text);
+  if(!q) return esc(text);
+  var ql = q.trim().toLowerCase();
+  if(!ql) return esc(text);
+  var lower = text.toLowerCase(), out='', i=0, idx;
+  while((idx=lower.indexOf(ql,i))!==-1){
+    if(idx>i) out+=esc(text.slice(i,idx));
+    out+='<mark>'+esc(text.slice(idx,idx+ql.length))+'</mark>';
+    i=idx+ql.length;
   }
+  if(i<text.length) out+=esc(text.slice(i));
+  return out;
+}
+function fmtCopy(c){ return '[사례] '+c.question+'\n\n■ 선관위 회답\n'+c.answer+'\n\n■ 관련 법조항\n'+c.law+'\n\n■ 문서번호\n질의 '+c.docQ+' / 회답 '+c.docA; }
+function copy(text,key){ try{ navigator.clipboard && navigator.clipboard.writeText(text); }catch(e){} S.copiedKey=key; clearTimeout(copyTimer); copyTimer=setTimeout(function(){ S.copiedKey=null; renderView(); },1600); renderView(); }
+
+function caseById(id){ for(var i=0;i<CASES.length;i++) if(CASES[i].id===id) return CASES[i]; return CASES[0]; }
+function filteredCases(q,tag){
+  var list = CASES.slice();
+  if(tag && tag!=='전체') list = list.filter(function(c){ return (c.tags||[]).indexOf(tag)!==-1; });
+  if(q){ var ql=q.trim().toLowerCase(); list = list.filter(function(c){
+    return (c.question+' '+c.answer+' '+(c.searchTags||[]).join(' ')+' '+(c.tags||[]).join(' ')).toLowerCase().indexOf(ql)!==-1; }); }
   return list;
 }
 
-function caseItemHTML(c, prefix, toggleFn) {
-  return `
-    <div class="case-item" id="${prefix}-${c.id}">
-      <div class="case-header" onclick="${toggleFn}(${c.id})">
-        <div class="case-header-body">
-          <div class="case-meta">
-            ${c.tags.map(t => `<span class="badge">${t}</span>`).join('')}
-          </div>
-          <div class="case-q">${c.question}</div>
-        </div>
-        ${CHEVRON}
-      </div>
-      <div class="case-body">
-        <div class="case-section">
-          <div class="case-section-label">선관위 회답</div>
-          <div class="case-section-text">${c.answer}</div>
-        </div>
-        <div class="case-section">
-          <div class="case-section-label">관련 법조항</div>
-          <div class="case-section-text">${c.law}</div>
-        </div>
-        <div class="case-doc">질의: ${c.docQ} &nbsp;|&nbsp; 회답: ${c.docA}</div>
-      </div>
-    </div>`;
+function setView(v){ S.view=v; if(v!=='cases') location.hash=''; renderView(); }
+function gotoTab(tab){ S.view='home'; S.activeTab=tab; renderView(); setTimeout(scrollNotice,60); }
+function scrollNotice(){
+  var el=document.getElementById('notice-section'); if(!el) return;
+  var sc=el.closest('.cc-scroll'); if(!sc) return;
+  var top=sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 16;
+  sc.scrollTo({ top:top, behavior:reduced()?'auto':'smooth' });
 }
 
-function renderCases() {
-  const hasQuery = currentKw || currentTag !== 'all';
-  const infoEl = document.getElementById('result-info');
-  const listEl = document.getElementById('case-list');
+/* ============================================================
+   RENDER — sidebar + header (static-ish), main view swap
+   ============================================================ */
+function renderShell(){
+  var navDefs=[['home','개요'],['cases','사례 검색'],['qgen','질의서 초안 만들기'],['report','회신 사례 제보하기'],['checklist','질의 전 체크리스트']];
+  var navHtml = navDefs.map(function(nd){
+    var k=nd[0], label=nd[1], a=(S.view===k);
+    return '<button data-nav="'+k+'" style="display:flex;align-items:center;gap:11px;padding:10px 11px;border:none;border-radius:9px;font-size:14px;font-weight:'+(a?'600':'500')+';color:'+(a?'#fff':'rgba(255,255,255,.6)')+';background:'+(a?'rgba(255,255,255,.12)':'transparent')+';cursor:pointer;text-align:left">'+
+      '<span style="width:7px;height:7px;border-radius:2px;flex:none;background:'+(a?'var(--accent-line)':'rgba(255,255,255,.35)')+'"></span>'+esc(label)+'</button>';
+  }).join('');
 
-  if (!hasQuery) {
-    infoEl.textContent = '';
-    listEl.innerHTML = `
-      <div class="search-prompt">
-        <h3>키워드를 입력하거나 태그를 선택해주세요</h3>
-        <p>검색어 예시: 행사, 위촉식, 홍보대사, 공모전, SNS, 성과홍보, 경품, 기자단</p>
-      </div>`;
-    return;
+  return ''+
+  '<aside class="no-print" style="width:240px;flex:none;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;padding:20px 16px">'+
+    '<div style="padding:0 8px 22px">'+
+      '<div style="font-size:16px;font-weight:700;letter-spacing:-.01em">선거법 도우미</div>'+
+      '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:3px">경기도청 정책홍보담당관</div>'+
+    '</div>'+
+    '<nav style="display:flex;flex-direction:column;gap:3px">'+navHtml+'</nav>'+
+    '<div style="margin-top:auto;padding:16px 11px 4px;border-top:1px solid rgba(255,255,255,.1)">'+
+      '<div style="font-size:12px;color:rgba(255,255,255,.5)">경기도선거관리위원회</div>'+
+      '<a href="tel:0312594876" style="display:block;color:#fff;font-weight:700;font-size:17px;margin-top:3px;font-family:var(--mono)">'+PHONE+'</a>'+
+      '<button data-nav="checklist" style="display:block;width:100%;margin-top:12px;padding:10px 0;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:14px;font-weight:600;cursor:pointer">질의 전 체크리스트</button>'+
+    '</div>'+
+  '</aside>'+
+  '<main style="flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden">'+
+    '<header id="topbar" style="flex:none;background:var(--surface);border-bottom:1px solid var(--line);padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px"></header>'+
+    '<div id="view" style="flex:1;min-height:0;display:flex"></div>'+
+  '</main>';
+}
+
+function renderTopbar(){
+  var titles={home:'개요',cases:'사례 검색',qgen:'질의서 초안 만들기',report:'회신 사례 제보하기',checklist:'질의 전 체크리스트'};
+  var sg=seg(days()), sc=segColors(sg.key);
+  return '<div style="min-width:0"><div style="font-size:19px;font-weight:700;letter-spacing:-.01em">'+esc(titles[S.view])+'</div></div>'+
+    '<div style="display:flex;align-items:center;gap:10px;flex:none">'+
+      '<span style="font-size:13px;color:var(--muted)">데이터 기준일 '+esc(CONFIG.dataDate)+'</span>'+
+      '<span style="display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:8px;background:'+sc.bg+';border:1px solid '+sc.bd+';color:'+sc.tx+';font-size:13px;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:'+sc.tx+'"></span>'+ddayText()+' · '+esc(sg.short)+'</span>'+
+    '</div>';
+}
+
+/* ---------- 개요 (home) ---------- */
+function homeResultsHtml(){
+  var list = filteredCases(S.homeQ, '전체');
+  var rows = list.map(function(c){
+    var co=core(c);
+    return '<button data-pick="'+c.id+'" style="width:100%;text-align:left;display:flex;gap:12px;align-items:center;padding:14px 16px;background:none;border:none;border-top:1px solid var(--line-soft);cursor:pointer">'+
+      '<span style="flex:1;min-width:0"><span style="display:block;font-size:15px;font-weight:600;color:var(--ink);line-height:1.45">'+hl(c.question,S.homeQ)+'</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">'+esc(co.tagText)+'</span></span>'+
+      '<span aria-hidden="true" style="flex:none;color:var(--muted);font-size:13px">→</span>'+
+    '</button>';
+  }).join('');
+  if(!list.length){
+    rows='<div style="padding:32px;text-align:center;color:var(--sub);font-size:14px">‘'+esc(S.homeQ)+'’에 대한 사례가 없습니다.</div>';
   }
+  return rows;
+}
+function noticePanelHtml(){
+  var blocks = NOTICE[S.activeTab].blocks;
+  return blocks.map(function(block){
+    var head = block.heading ? '<div style="margin-bottom:14px"><h3 style="font-size:16px;font-weight:600;margin:0">'+esc(block.heading)+'</h3><span style="font-size:13px;font-weight:500;color:var(--muted)">'+esc(block.law)+'</span></div>' : '';
+    var note = block.note ? '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:14px;padding:10px 12px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);font-size:14px"><span aria-hidden="true" style="font-weight:700">⚠</span><span>주의 · '+esc(block.note)+'</span></div>' : '';
+    var okItems = block.ok.map(function(it){ return '<li style="display:flex;gap:10px;padding:12px 14px;border-top:1px solid var(--line-soft);font-size:15px;line-height:1.65"><span aria-hidden="true" style="flex:none;color:var(--ok-t);font-weight:700">✓</span><span>'+esc(it)+'</span></li>'; }).join('');
+    var noItems = block.no.map(function(it){ return '<li style="display:flex;gap:10px;padding:12px 14px;border-top:1px solid var(--line-soft);font-size:15px;line-height:1.65"><span aria-hidden="true" style="flex:none;color:var(--no-t);font-weight:700">✕</span><span>'+esc(it)+'</span></li>'; }).join('');
+    return '<div>'+head+note+
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">'+
+        '<div style="border:1px solid var(--ok-bd);border-radius:12px;overflow:hidden">'+
+          '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--ok-bg);border-bottom:1px solid var(--ok-bd)"><span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;background:var(--ok-t);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✓</span><span style="font-size:15px;font-weight:700;color:var(--ok-t)">가능</span></div>'+
+          '<ul style="list-style:none;margin:0;padding:0">'+okItems+'</ul>'+
+        '</div>'+
+        '<div style="border:1px solid var(--no-bd);border-radius:12px;overflow:hidden">'+
+          '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--no-bg);border-bottom:1px solid var(--no-bd)"><span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;background:var(--no-t);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✕</span><span style="font-size:15px;font-weight:700;color:var(--no-t)">불가</span></div>'+
+          '<ul style="list-style:none;margin:0;padding:0">'+noItems+'</ul>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+function renderHome(){
+  var sg=seg(days()), sc=segColors(sg.key), d=days();
+  var clamped=Math.max(0,Math.min(210,d));
+  var markerLeft=((210-clamped)/210*100).toFixed(1)+'%';
+  var on='var(--navy)', off='#CBD2DB';
+  var zone1=sg.key==='normal'?on:off, zone2=sg.key==='d180'?on:off, zone3=(sg.key==='d60'||sg.key==='after')?on:off;
 
-  const list = getFiltered();
-  infoEl.innerHTML = `검색 결과 <b>${list.length}건</b>`;
+  var chips=['행사','위촉식','홍보대사','공모전','SNS','성과홍보','경품','기자단'].map(function(k){
+    return '<button data-chip="'+esc(k)+'" style="height:32px;padding:0 12px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--sub);font-size:13px;font-weight:500;cursor:pointer">'+esc(k)+'</button>';
+  }).join('');
 
-  if (list.length === 0) {
-    listEl.innerHTML = `<div class="empty">검색 결과가 없습니다.<br>다른 키워드로 검색해보세요.</div>`;
-    return;
+  var tabDefs=[['before','선거일 전 유의사항'],['event','각종 행사 시 유의사항'],['daily','일상 홍보 시 유의사항']];
+  var tabsHtml=tabDefs.map(function(td){ var k=td[0], a=(S.activeTab===k);
+    return '<button role="tab" aria-selected="'+(a?'true':'false')+'" data-tab="'+k+'" style="padding:12px 14px;background:none;border:none;border-bottom:'+(a?'2px solid var(--navy)':'2px solid transparent')+';margin-bottom:-1px;font-size:15px;font-weight:'+(a?'700':'500')+';color:'+(a?'var(--navy)':'var(--sub)')+';cursor:pointer">'+esc(td[1])+'</button>';
+  }).join('');
+
+  var listCount = filteredCases(S.homeQ,'전체').length;
+
+  document.getElementById('view').innerHTML =
+  '<div class="cc-scroll" style="flex:1;overflow-y:auto">'+
+    '<div style="max-width:1080px;margin:0 auto;padding:28px 32px 72px">'+
+      /* 시기 배너 */
+      '<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 26px">'+
+        '<div style="display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between;align-items:flex-start">'+
+          '<div style="min-width:240px">'+
+            '<div style="font-size:14px;font-weight:600;color:var(--navy)">'+esc(CONFIG.electionName)+'</div>'+
+            '<div style="display:flex;align-items:baseline;gap:12px;margin-top:6px">'+
+              '<span style="font-size:44px;font-weight:700;line-height:1;font-family:var(--mono);letter-spacing:-.03em">'+ddayText()+'</span>'+
+              '<span style="font-size:14px;color:var(--sub)">'+esc(fmt(elecDate()))+'</span>'+
+            '</div>'+
+            '<div style="margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:8px;background:'+sc.bg+';border:1px solid '+sc.bd+';color:'+sc.tx+'">'+
+              '<span style="font-weight:700">'+sc.icon+'</span><span style="font-size:14px;font-weight:600">지금은 '+esc(sg.label)+'입니다</span>'+
+            '</div>'+
+          '</div>'+
+          '<div style="min-width:260px;flex:1;max-width:360px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px">'+
+            '<div style="font-size:14px;font-weight:600;margin-bottom:8px">행사일 계산기</div>'+
+            '<input id="calc-input" type="date" value="'+esc(S.calcInput)+'" aria-label="행사 예정일" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;background:#fff;color:var(--ink)">'+
+            '<div id="calc-result"></div>'+
+            '<div style="margin-top:10px;font-size:13px;color:var(--muted)">예정일을 넣으면 제한 구간을 판정합니다.</div>'+
+          '</div>'+
+        '</div>'+
+        /* 타임라인 */
+        '<div style="margin-top:26px">'+
+          '<div style="position:relative;height:52px">'+
+            '<div style="position:absolute;top:20px;left:0;right:0;display:flex;height:12px;border-radius:6px;overflow:hidden">'+
+              '<button data-zone="daily" aria-label="상시 구간" style="flex:0 0 14.3%;border:none;padding:0;cursor:pointer;background:'+zone1+'"></button>'+
+              '<button data-zone="before" aria-label="180일 제한 구간" style="flex:0 0 57.1%;border:none;padding:0;cursor:pointer;background:'+zone2+';border-left:2px solid var(--surface);border-right:2px solid var(--surface)"></button>'+
+              '<button data-zone="before" aria-label="60일 제한 구간" style="flex:1;border:none;padding:0;cursor:pointer;background:'+zone3+'"></button>'+
+            '</div>'+
+            '<div style="position:absolute;top:8px;bottom:8px;left:'+markerLeft+';transform:translateX(-50%);display:flex;flex-direction:column;align-items:center">'+
+              '<span style="font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;margin-bottom:2px">오늘</span>'+
+              '<span style="width:2px;flex:1;background:var(--navy)"></span>'+
+            '</div>'+
+          '</div>'+
+          '<div style="position:relative;height:18px;font-size:12px;font-weight:600;color:var(--sub)">'+
+            '<span style="position:absolute;left:0">상시</span>'+
+            '<span style="position:absolute;left:14.3%;transform:translateX(-50%)">D-180</span>'+
+            '<span style="position:absolute;left:71.4%;transform:translateX(-50%)">D-60</span>'+
+            '<span style="position:absolute;right:0">선거일</span>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      /* 사례 키워드 검색 */
+      '<div style="margin-top:32px">'+
+        '<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">'+
+          '<h2 style="font-size:18px;font-weight:700;margin:0">사례 검색</h2>'+
+          '<button data-nav="cases" style="background:none;border:none;padding:0;color:var(--navy);font-size:13px;font-weight:600;cursor:pointer">전체 사례 보기 →</button>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px">'+
+          '<span aria-hidden="true" style="color:var(--muted);font-size:16px">⌕</span>'+
+          '<input id="home-q" value="'+esc(S.homeQ)+'" placeholder="키워드로 사례 검색 — 행사, 위촉식, SNS, 성과홍보, 경품…" aria-label="사례 검색" style="flex:1;border:none;outline:none;background:none;font-size:16px;color:var(--ink)">'+
+          (S.homeQ?'<button id="home-clear" style="border:none;background:var(--line);color:var(--sub);width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>':'')+
+        '</div>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">'+chips+'</div>'+
+        '<div id="home-count" aria-live="polite" style="margin-top:14px;font-size:13px;color:var(--muted)">'+listCount+'건</div>'+
+        '<div id="home-results" style="margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden">'+homeResultsHtml()+'</div>'+
+      '</div>'+
+      /* 유의사항 */
+      '<div id="notice-section" style="margin-top:48px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:4px">'+
+          '<h2 style="font-size:18px;font-weight:700;margin:0">유의사항</h2>'+
+          '<button id="notice-print" class="no-print" style="height:36px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;cursor:pointer">인쇄용 보기</button>'+
+        '</div>'+
+        '<div role="tablist" style="display:flex;gap:4px;border-bottom:1px solid var(--line);flex-wrap:wrap">'+tabsHtml+'</div>'+
+        '<div id="notice-panel" role="tabpanel" style="padding-top:24px;display:flex;flex-direction:column;gap:32px">'+noticePanelHtml()+'</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+
+  updateCalcResult();
+
+  var hq=document.getElementById('home-q');
+  hq.addEventListener('input',function(){ S.homeQ=this.value; updateHome(); });
+  var hc=document.getElementById('home-clear'); if(hc) hc.addEventListener('click',function(){ S.homeQ=''; renderHome(); document.getElementById('home-q').focus(); });
+  var ci=document.getElementById('calc-input');
+  ci.addEventListener('input',function(){ S.calcInput=this.value; updateCalcResult(); });
+  document.getElementById('notice-print').addEventListener('click',function(){ window.print(); });
+}
+function updateHome(){
+  var listCount=filteredCases(S.homeQ,'전체').length;
+  document.getElementById('home-count').textContent=listCount+'건';
+  document.getElementById('home-results').innerHTML=homeResultsHtml();
+}
+function updateCalcResult(){
+  var box=document.getElementById('calc-result'); if(!box) return;
+  if(!S.calcInput){ box.innerHTML=''; return; }
+  var cd=new Date(S.calcInput);
+  if(isNaN(cd)){ box.innerHTML=''; return; }
+  var elec=elecDate();
+  var cd0=new Date(cd.getFullYear(),cd.getMonth(),cd.getDate());
+  var d2=Math.round((elec-cd0)/86400000);
+  var seg2=seg(d2), col=segColors(seg2.key);
+  var tabLabel=seg2.tab==='before'?'선거일 전 유의사항':'일상 홍보 유의사항';
+  box.innerHTML='<div style="margin-top:12px;padding:10px 12px;border-radius:8px;font-size:14px;line-height:1.55;background:'+col.bg+';border:1px solid '+col.bd+';color:'+col.tx+'">'+
+    '<span style="font-weight:700">'+col.icon+' '+esc(fmt(cd0))+'은(는) 선거일 전 '+d2+'일 → '+esc(seg2.label)+'</span>'+
+    '<button data-calctab="'+seg2.tab+'" style="display:block;margin-top:6px;background:none;border:none;padding:0;color:var(--navy);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline">'+esc(tabLabel)+' 보기 →</button>'+
+  '</div>';
+}
+
+/* ---------- 사례 검색 (cases split) ---------- */
+function casesRowsHtml(){
+  var list=filteredCases(S.cs.q,S.cs.filterTag);
+  if(!list.length){
+    return '<div style="padding:32px 18px;text-align:center;color:var(--sub);font-size:14px">‘'+esc(S.cs.q)+'’에 대한 사례가 없습니다.<br>선관위에 직접 문의하세요.</div>';
   }
+  return list.map(function(c){
+    var co=core(c), sel=(S.cs.selectedId===c.id);
+    return '<button data-select="'+c.id+'" style="width:100%;text-align:left;display:flex;gap:11px;align-items:flex-start;padding:14px 18px;background:'+(sel?'var(--tint)':'transparent')+';border:none;border-left:3px solid '+(sel?'var(--navy)':'transparent')+';border-bottom:1px solid var(--line-soft);cursor:pointer">'+
+      '<span style="min-width:0"><span style="display:block;font-size:14px;font-weight:600;line-height:1.45;color:var(--ink)">'+hl(c.question,S.cs.q)+'</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:3px">'+esc(co.tagText)+'</span></span>'+
+    '</button>';
+  }).join('');
+}
+function casesDetailHtml(){
+  var c=caseById(S.cs.selectedId), co=core(c);
+  var copyLabel=S.copiedKey==='cd'?'복사됨 ✓':'내용 복사';
+  var linkLabel=S.copiedKey==='cl'?'복사됨 ✓':'링크 복사';
+  return '<div style="max-width:880px;margin:0 auto;padding:32px 40px 72px">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'+
+      '<span style="font-size:13px;color:var(--muted);font-family:var(--mono)">'+esc(co.tagText)+'</span>'+
+    '</div>'+
+    '<h2 style="font-size:24px;font-weight:700;line-height:1.4;letter-spacing:-.01em;margin:0 0 24px">'+esc(c.question)+'</h2>'+
+    '<div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px 28px">'+
+      '<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px">선관위 회답</div>'+
+      '<p style="font-size:16px;line-height:1.8;margin:0 0 22px">'+esc(c.answer)+'</p>'+
+      '<div style="border-top:1px solid var(--line-soft);padding-top:18px;display:flex;flex-wrap:wrap;gap:40px">'+
+        '<div><div style="font-size:12px;color:var(--muted);margin-bottom:3px">관련 법조항</div><div style="font-size:15px;font-weight:600">'+esc(c.law)+' <a href="https://www.law.go.kr" target="_blank" rel="noopener" title="외부망에서만 열립니다" style="font-size:13px;font-weight:500">법령정보센터 ↗</a></div></div>'+
+        '<div><div style="font-size:12px;color:var(--muted);margin-bottom:3px">질의 / 회답 문서번호</div><div style="font-size:14px;font-weight:600;font-family:var(--mono)">'+esc(c.docQ)+' / '+esc(c.docA)+'</div></div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;margin-top:22px" class="no-print">'+
+        '<button id="detail-copy" style="height:40px;padding:0 16px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:14px;font-weight:600;cursor:pointer">'+copyLabel+'</button>'+
+        '<button id="detail-copylink" style="height:40px;padding:0 16px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer">'+linkLabel+'</button>'+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-top:16px;padding:12px 16px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);font-size:13px;line-height:1.65">이 결과는 참고용이며 법적 효력이 없습니다. 행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있습니다. 최종 판단은 경기도선거관리위원회('+PHONE+')로 문의하세요.</div>'+
+  '</div>';
+}
+function casesFilterHtml(){
+  var tagDefs=['전체','SNS','홈페이지·온라인','광고','인쇄·홍보물','행사·이벤트'];
+  return tagDefs.map(function(t){ var a=(S.cs.filterTag===t);
+    return '<button data-filter="'+esc(t)+'" style="height:30px;padding:0 11px;border:1px solid '+(a?'var(--ink)':'var(--line)')+';border-radius:8px;background:'+(a?'var(--ink)':'var(--surface)')+';color:'+(a?'#fff':'var(--sub)')+';font-size:13px;font-weight:500;cursor:pointer">'+esc(t)+'</button>';
+  }).join('');
+}
+function renderCases(){
+  var count=filteredCases(S.cs.q,S.cs.filterTag).length;
+  document.getElementById('view').innerHTML =
+  '<div style="width:420px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--surface)">'+
+    '<div style="padding:16px 18px;border-bottom:1px solid var(--line)">'+
+      '<div style="display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px">'+
+        '<span aria-hidden="true" style="color:var(--muted);font-size:16px">⌕</span>'+
+        '<input id="cs-q" value="'+esc(S.cs.q)+'" placeholder="사례 키워드 검색" aria-label="사례 검색" style="flex:1;border:none;outline:none;background:none;font-size:15px">'+
+        (S.cs.q?'<button id="cs-clear" style="border:none;background:var(--line);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:11px;color:var(--sub)">✕</button>':'')+
+      '</div>'+
+      '<div id="cs-filters" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">'+casesFilterHtml()+'</div>'+
+      '<div id="cs-count" aria-live="polite" style="font-size:13px;color:var(--muted);margin-top:12px">'+count+'건</div>'+
+    '</div>'+
+    '<div id="cs-rows" class="cc-scroll" style="flex:1;overflow-y:auto">'+casesRowsHtml()+'</div>'+
+  '</div>'+
+  '<div id="cs-detail" class="cc-scroll" style="flex:1;overflow-y:auto;background:var(--bg)">'+casesDetailHtml()+'</div>';
 
-  listEl.innerHTML = `<div class="case-list">${list.map(c => caseItemHTML(c, 'case', 'toggleCase')).join('')}</div>`;
+  var q=document.getElementById('cs-q');
+  q.addEventListener('input',function(){ S.cs.q=this.value; updateCasesList(); });
+  var cl=document.getElementById('cs-clear'); if(cl) cl.addEventListener('click',function(){ S.cs.q=''; renderCases(); document.getElementById('cs-q').focus(); });
+  bindCasesDetail();
+}
+function updateCasesList(){
+  document.getElementById('cs-count').textContent=filteredCases(S.cs.q,S.cs.filterTag).length+'건';
+  document.getElementById('cs-rows').innerHTML=casesRowsHtml();
+}
+function updateCasesDetail(){
+  document.getElementById('cs-detail').innerHTML=casesDetailHtml();
+  bindCasesDetail();
+}
+function bindCasesDetail(){
+  var b1=document.getElementById('detail-copy'); if(b1) b1.addEventListener('click',function(){ copy(fmtCopy(caseById(S.cs.selectedId)),'cd'); });
+  var b2=document.getElementById('detail-copylink'); if(b2) b2.addEventListener('click',function(){ copy(location.origin+location.pathname+'#case-'+S.cs.selectedId,'cl'); });
 }
 
-function toggleCase(id) {
-  const el = document.getElementById('case-' + id);
-  const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.case-item.open').forEach(e => e.classList.remove('open'));
-  if (!isOpen) el.classList.add('open');
+/* ---------- 질의서 초안 만들기 (qgen) ---------- */
+function qPreviewText(){
+  var qp=S.q;
+  return '[선거법 관련 질의]\n1. 행위 주체: '+(qp.s||'{주체 — 예: 경기도청 ○○과}')+'\n2. 행위 시기: '+(qp.t||'{시기 — 예: 2026. ○. ○.}')+'\n3. 목적: '+(qp.p||'{목적 — 예: ○○ 정책 홍보}')+'\n4. 방법: '+(qp.m||'{방법 — 예: 도 공식 SNS 게시}')+'\n5. 대상: '+(qp.g||'{대상 — 예: 도민 전체}')+'\n\n위와 같은 행위가 공직선거법(제86조 등)에 저촉되는지 여부를 질의합니다.';
+}
+function renderQgen(){
+  var fields=[['s','주체 — 예: 경기도청 ○○과'],['t','시기 — 예: 2026. ○. ○.'],['p','목적 — 예: ○○ 정책 홍보'],['m','방법 — 예: 도 공식 SNS 게시'],['g','대상 — 예: 도민 전체']];
+  var inputs=fields.map(function(f){ return '<input data-qf="'+f[0]+'" value="'+esc(S.q[f[0]])+'" placeholder="'+esc(f[1])+'" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'; }).join('');
+  var copyLabel=S.copiedKey==='qgen'?'복사됨 ✓':'문안 복사';
+  document.getElementById('view').innerHTML =
+  '<div class="cc-scroll" style="flex:1;overflow-y:auto">'+
+    '<div style="max-width:1000px;margin:0 auto;padding:24px 32px 72px">'+
+      '<p style="font-size:14px;color:var(--sub);margin:0 0 20px">주체·시기·목적·방법·대상 5요소를 채우면 선관위 문의용 질의 문안이 실시간으로 조립됩니다.</p>'+
+      '<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">'+
+        '<div style="display:flex;flex-direction:column;gap:10px"><div style="font-size:14px;font-weight:600">입력</div>'+inputs+'</div>'+
+        '<div>'+
+          '<div style="font-size:14px;font-weight:600;margin-bottom:10px">미리보기</div>'+
+          '<pre id="q-preview" style="white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.7;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px;margin:0">'+esc(qPreviewText())+'</pre>'+
+          '<button id="q-copy" style="margin-top:10px;height:40px;padding:0 16px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:14px;font-weight:600;cursor:pointer">'+copyLabel+'</button>'+
+          '<p style="font-size:13px;color:var(--muted);margin:10px 0 0;line-height:1.6">이 문안은 문의를 돕기 위한 초안입니다. 경기도선거관리위원회('+PHONE+')에 전화 또는 서면으로 문의하세요.</p>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+  Array.prototype.forEach.call(document.querySelectorAll('[data-qf]'),function(inp){
+    inp.addEventListener('input',function(){ S.q[this.getAttribute('data-qf')]=this.value; document.getElementById('q-preview').textContent=qPreviewText(); });
+  });
+  document.getElementById('q-copy').addEventListener('click',function(){ copy(qPreviewText(),'qgen'); });
 }
 
-function onSearch() {
-  currentKw = document.getElementById('search-input').value.trim();
-  renderCases();
-}
-function filterTag(btn, tag) {
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentTag = tag;
-  renderCases();
-}
-
-// ===== 결정트리 =====
-const TREE = {
-  1: {
-    q: '어떤 업무를 진행 중인가요?',
-    sub: '가장 가까운 유형을 선택해주세요.',
-    opts: [
-      { label: '행사 개최·참석', desc: '위촉식, 소통행사, 체육대회, 발대식, 공모전 등', val: 'event' },
-      { label: '홍보물 제작·광고', desc: '정책 광고, 성과홍보, 소식지, G버스TV 등', val: 'ad' },
-      { label: '온라인·SNS 게시', desc: '홈페이지, 유튜브, SNS, 카카오톡 등', val: 'online' },
-    ]
-  },
-  2: {
-    event: {
-      q: '어떤 행사인가요?',
-      sub: '해당하는 유형을 선택해주세요.',
-      opts: [
-        { label: '도지사가 직접 참석하는 행사', desc: '위촉식, 소통행사, 현장방문, 체육대회 등', val: 'event_governor' },
-        { label: '경기도가 주최·후원하는 행사', desc: '공모전, 기자단 운영 등', val: 'event_host' },
-        { label: '경품·기념품·인센티브 제공', desc: '행사 경품, 기자단 인센티브, 공모전 부상 등', val: 'event_gift' },
-        { label: '공공기관·출연기관 행사 홍보', desc: '공공기관 주최 행사를 경기도 채널에서 홍보', val: 'event_public' },
-      ]
-    },
-    ad: {
-      q: '어떤 홍보물인가요?',
-      sub: '해당하는 유형을 선택해주세요.',
-      opts: [
-        { label: '정책·사업 정보 제공 광고', desc: '신청방법, 지원대상 등 도민 생활정보 중심', val: 'ad_info' },
-        { label: '성과·추진실적 홍보 (1종1회)', desc: '도정 성과, 분기 홍보물, 도지사 사진 포함', val: 'ad_result' },
-        { label: '옥외광고·G버스TV 등 매체', desc: '버스 래핑, 미디어보드, G버스TV 등', val: 'ad_outdoor' },
-      ]
-    },
-    online: {
-      q: '어떤 온라인 활동인가요?',
-      sub: '해당하는 유형을 선택해주세요.',
-      opts: [
-        { label: '홈페이지 콘텐츠 게시', desc: '공약현황, 기획콘텐츠, 정책비교 게시 등', val: 'online_web' },
-        { label: 'SNS·유튜브 게시', desc: '경기도 공식 SNS, 유튜브 채널 게시', val: 'online_sns' },
-        { label: '행사 관련 사후 게시', desc: '행사 사진·영상을 홈페이지·SNS에 게시', val: 'online_post' },
-        { label: '재난·성금 모금 홍보', desc: '재난 대응, 성금 모금 안내 게시', val: 'online_disaster' },
-      ]
-    }
-  }
-};
-
-const CASE_MAP = {
-  event_governor: [14, 16, 17, 1, 26],
-  event_host: [11, 18, 20, 25, 27],
-  event_gift: [2, 7, 21, 25, 27, 28],
-  event_public: [6, 23, 24],
-  ad_info: [3, 12],
-  ad_result: [5, 13],
-  ad_outdoor: [13],
-  online_web: [4, 8, 10],
-  online_sns: [5, 6, 15, 19],
-  online_post: [22, 15],
-  online_disaster: [9, 12],
-};
-
-function renderProg(step) {
-  document.getElementById('prog').textContent = `${step} / 2 단계`;
-}
-
-function renderTree() {
-  const step = treeState.step;
-  renderProg(step);
-  const content = document.getElementById('tree-content');
-
-  if (step === 1) {
-    const d = TREE[1];
-    content.innerHTML = `
-      <div class="tree-q">${d.q}</div>
-      <div class="tree-sub">${d.sub}</div>
-      <div class="tree-options">${d.opts.map(o => `
-        <button class="tree-opt" onclick="selectQ1('${o.val}')">
-          <div><div class="tree-opt-label">${o.label}</div><div class="tree-opt-desc">${o.desc}</div></div>
-          ${ARROW_RIGHT}
-        </button>`).join('')}
-      </div>`;
+/* ---------- 회신 사례 제보하기 (report) ---------- */
+function renderReport(){
+  var done=(S.reportStatus==='success');
+  var invalid=(S.reportStatus==='invalid');
+  var failed=(S.reportStatus==='failed');
+  var sending=(S.reportStatus==='sending');
+  var btnLabel=sending?'보내는 중…':'제보 보내기';
+  var btnBg=sending?'var(--muted)':'var(--navy)';
+  var body;
+  if(done){
+    body='<div style="padding:16px;border-radius:8px;background:var(--ok-bg);border:1px solid var(--ok-bd);color:var(--ok-t);font-size:15px;font-weight:600">✓ 제보가 접수되었습니다. 담당자 검수 후 사례에 반영됩니다.</div>';
   } else {
-    const d = TREE[2][treeState.q1];
-    content.innerHTML = `
-      <div class="tree-q">${d.q}</div>
-      <div class="tree-sub">${d.sub}</div>
-      <div class="tree-options">${d.opts.map(o => `
-        <button class="tree-opt" onclick="selectQ2('${o.val}')">
-          <div><div class="tree-opt-label">${o.label}</div><div class="tree-opt-desc">${o.desc}</div></div>
-          ${ARROW_RIGHT}
-        </button>`).join('')}
-      </div>
-      <div style="margin-top:16px"><button class="btn-back" onclick="goBack()">← 이전</button></div>`;
+    body='<div style="display:flex;flex-direction:column;gap:10px">'+
+      '<label style="font-size:13px;font-weight:600;color:var(--sub)">질의 요지 <span style="color:var(--no-t)">필수</span></label>'+
+      '<textarea data-rf="q" rows="2" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;line-height:1.6">'+esc(S.r.q)+'</textarea>'+
+      '<label style="font-size:13px;font-weight:600;color:var(--sub)">선관위 회답 내용 <span style="color:var(--no-t)">필수</span></label>'+
+      '<textarea data-rf="a" rows="3" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;line-height:1.6">'+esc(S.r.a)+'</textarea>'+
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">'+
+        '<input data-rf="date" value="'+esc(S.r.date)+'" placeholder="회답 일자·문서번호 (선택)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
+        '<input data-rf="law" value="'+esc(S.r.law)+'" placeholder="관련 법조항 (선택)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
+      '</div>'+
+      '<input data-rf="contact" value="'+esc(S.r.contact)+'" placeholder="제보자 소속·연락처 (선택 — 검수 시 확인용)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
+      '<input data-rf="hp" value="'+esc(S.r.hp)+'" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">'+
+      (invalid?'<div style="font-size:14px;color:var(--no-t)">질의 요지와 선관위 회답 내용은 필수입니다.</div>':'')+
+      (failed?'<div style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);font-size:14px"><span aria-hidden="true" style="font-weight:700">⚠</span><span>전송하지 못했습니다. 잠시 후 다시 시도하거나 담당자에게 직접 전달해 주세요.</span></div>':'')+
+      '<div><button id="report-submit"'+(sending?' disabled':'')+' style="height:44px;padding:0 20px;border:none;border-radius:8px;background:'+btnBg+';color:#fff;font-size:15px;font-weight:600;cursor:pointer">'+btnLabel+'</button></div>'+
+      '<p style="font-size:13px;color:var(--muted);margin:0;line-height:1.6">제보는 사례 시트에 바로 반영되지 않으며, 담당자 검수를 거쳐 반영됩니다.</p>'+
+    '</div>';
+  }
+  document.getElementById('view').innerHTML =
+  '<div class="cc-scroll" style="flex:1;overflow-y:auto">'+
+    '<div style="max-width:760px;margin:0 auto;padding:24px 32px 72px">'+
+      '<p style="font-size:14px;color:var(--sub);margin:0 0 20px">선관위에서 새 회신을 받으면 제보해 주세요. 제보는 담당자 검수를 거쳐 사례에 반영됩니다.</p>'+
+      '<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 26px">'+body+'</div>'+
+    '</div>'+
+  '</div>';
+  Array.prototype.forEach.call(document.querySelectorAll('[data-rf]'),function(inp){
+    inp.addEventListener('input',function(){ S.r[this.getAttribute('data-rf')]=this.value; });
+  });
+  var sub=document.getElementById('report-submit'); if(sub) sub.addEventListener('click',submitReport);
+}
+function submitReport(){
+  if(S.r.hp) return; /* honeypot */
+  if(!S.r.q.trim()||!S.r.a.trim()){ S.reportStatus='invalid'; renderReport(); return; }
+  S.reportStatus='sending'; renderReport();
+  if(CONFIG.reportPostUrl){
+    var payload={ type:'report', question:S.r.q, answer:S.r.a, date:S.r.date, law:S.r.law, contact:S.r.contact };
+    /* no-cors: GAS 웹앱은 CORS 응답 헤더를 주지 않아 응답 본문을 읽을 수 없으므로,
+       simple request(text/plain)로 저장만 하고 성공 처리한다. */
+    fetch(CONFIG.reportPostUrl,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) })
+      .then(function(){ S.reportStatus='success'; S.r={q:'',a:'',date:'',law:'',contact:'',hp:''}; renderReport(); })
+      .catch(function(){ S.reportStatus='failed'; renderReport(); });
+  } else {
+    setTimeout(function(){ S.reportStatus='success'; renderReport(); },1200);
   }
 }
 
-function selectQ1(val) { treeState.q1 = val; treeState.step = 2; renderTree(); }
-function goBack() { treeState.step = 1; renderTree(); }
-function selectQ2(val) {
-  const ids = CASE_MAP[val] || [];
-  const cases = ids.map(id => CASES.find(c => c.id === id)).filter(Boolean);
-  const q1Labels = { event: '행사 개최·참석', ad: '홍보물 제작·광고', online: '온라인·SNS 게시' };
-  const q2Labels = {
-    event_governor: '도지사 직접 참석 행사', event_host: '경기도 주최·후원 행사',
-    event_gift: '경품·기념품·인센티브 제공', event_public: '공공기관 행사 홍보',
-    ad_info: '정책·사업 정보 제공', ad_result: '성과·추진실적 홍보',
-    ad_outdoor: '옥외광고·G버스TV 매체',
-    online_web: '홈페이지 콘텐츠 게시', online_sns: 'SNS·유튜브 게시',
-    online_post: '행사 사후 게시', online_disaster: '재난·성금 모금 홍보',
-  };
-  showResult(cases, { q1: q1Labels[treeState.q1], q2: q2Labels[val] });
+/* ---------- 질의 전 체크리스트 (checklist) ---------- */
+function renderChecklist(){
+  var phoneLabel=S.copiedKey==='phone'?'복사됨 ✓':'번호 복사';
+  var items=CHECKLIST.map(function(it){ return '<li style="display:flex;gap:10px;font-size:15px;color:var(--sub);line-height:1.5"><span aria-hidden="true" style="color:var(--navy);margin-top:1px">▢</span><span>'+esc(it)+'</span></li>'; }).join('');
+  document.getElementById('view').innerHTML =
+  '<div class="cc-scroll" style="flex:1;overflow-y:auto">'+
+    '<div style="max-width:1000px;margin:0 auto;padding:24px 32px 72px">'+
+      '<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 26px">'+
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">'+
+          '<div>'+
+            '<div style="font-size:14px;color:var(--sub)">경기도선거관리위원회</div>'+
+            '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">'+
+              '<a href="tel:0312594876" style="font-size:26px;font-weight:700;color:var(--ink);font-family:var(--mono)">'+PHONE+'</a>'+
+              '<button id="copy-phone" class="no-print" style="height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;color:var(--ink)">'+phoneLabel+'</button>'+
+            '</div>'+
+            '<div style="font-size:14px;color:var(--sub);margin-top:8px;line-height:1.7">이 서비스는 참고용입니다. 행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있으므로, 최종 판단은 반드시 선관위에 문의하세요.</div>'+
+          '</div>'+
+          '<div>'+
+            '<div style="font-size:14px;font-weight:600;margin-bottom:10px">질의 전 준비 체크리스트</div>'+
+            '<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">'+items+'</ul>'+
+          '</div>'+
+        '</div>'+
+        '<div style="margin-top:20px;padding:14px 16px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd)">'+
+          '<div style="display:flex;gap:8px;align-items:flex-start"><span aria-hidden="true" style="color:var(--warn-t);font-weight:700">⚠</span><div style="font-size:14px;line-height:1.65;color:var(--warn-t)">위 5요소(주체·시기·목적·방법·대상)를 정리해 두면 선관위 질의가 빠르고 정확해집니다. 문안 작성이 필요하면 좌측 <strong>질의서 초안 만들기</strong>를 이용하세요.</div></div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="margin-top:16px;font-size:13px;color:var(--muted);line-height:1.7">출처: 중앙선거관리위원회·경기도선거관리위원회 질의회답 · 데이터 기준일 '+esc(CONFIG.dataDate)+' · v3.0.0 (프로토타입)</div>'+
+    '</div>'+
+  '</div>';
+  document.getElementById('copy-phone').addEventListener('click',function(){ copy(PHONE,'phone'); });
 }
 
-// ===== 결과 화면 =====
-function renderResult(cases, ctx) {
-  const el = document.getElementById('result-content');
-  el.innerHTML = `
-    <div class="result-context">
-      <span>${ctx.q1}</span><i>›</i><span>${ctx.q2}</span>
-    </div>
-    <div class="result-notice">
-      <div class="result-notice-title">관련 선관위 회답 사례 ${cases.length}건</div>
-      <div class="result-notice-text">아래 사례는 참고용입니다. 구체적인 행위 방식·시기·내용에 따라 판단이 달라질 수 있으니 반드시 선관위에 확인하세요.</div>
-    </div>
-    ${cases.length === 0
-      ? '<div class="empty">유사 사례를 찾지 못했습니다.<br>선관위에 직접 문의하세요.</div>'
-      : `<div class="case-list">${cases.map(c => caseItemHTML(c, 'rc', 'toggleRCase')).join('')}</div>`
+/* ============================================================
+   VIEW SWAP + GLOBAL EVENT DELEGATION
+   ============================================================ */
+function renderView(){
+  document.getElementById('topbar').innerHTML=renderTopbar();
+  /* refresh sidebar nav active states */
+  Array.prototype.forEach.call(document.querySelectorAll('aside [data-nav]'),function(b){
+    var k=b.getAttribute('data-nav');
+    if(k==='checklist' && b.parentElement && b.parentElement.style.marginTop==='auto') return; /* bottom cta keeps its style */
+  });
+  refreshSidebar();
+  if(S.view==='home') renderHome();
+  else if(S.view==='cases') renderCases();
+  else if(S.view==='qgen') renderQgen();
+  else if(S.view==='report') renderReport();
+  else if(S.view==='checklist') renderChecklist();
+}
+function refreshSidebar(){
+  var navDefs=[['home','개요'],['cases','사례 검색'],['qgen','질의서 초안 만들기'],['report','회신 사례 제보하기'],['checklist','질의 전 체크리스트']];
+  var nav=document.querySelector('aside nav'); if(!nav) return;
+  nav.innerHTML=navDefs.map(function(nd){
+    var k=nd[0], label=nd[1], a=(S.view===k);
+    return '<button data-nav="'+k+'" style="display:flex;align-items:center;gap:11px;padding:10px 11px;border:none;border-radius:9px;font-size:14px;font-weight:'+(a?'600':'500')+';color:'+(a?'#fff':'rgba(255,255,255,.6)')+';background:'+(a?'rgba(255,255,255,.12)':'transparent')+';cursor:pointer;text-align:left">'+
+      '<span style="width:7px;height:7px;border-radius:2px;flex:none;background:'+(a?'var(--accent-line)':'rgba(255,255,255,.35)')+'"></span>'+esc(label)+'</button>';
+  }).join('');
+}
+
+document.getElementById('app').addEventListener('click',function(e){
+  var t=e.target.closest('[data-nav],[data-chip],[data-pick],[data-tab],[data-zone],[data-calctab],[data-filter],[data-select]');
+  if(!t) return;
+  if(t.hasAttribute('data-nav')){ setView(t.getAttribute('data-nav')); return; }
+  if(t.hasAttribute('data-chip')){ S.homeQ=t.getAttribute('data-chip'); renderHome(); return; }
+  if(t.hasAttribute('data-pick')){ var id=+t.getAttribute('data-pick'); S.view='cases'; S.cs.selectedId=id; S.cs.q=S.homeQ; renderView(); return; }
+  if(t.hasAttribute('data-tab')){ S.activeTab=t.getAttribute('data-tab');
+    Array.prototype.forEach.call(document.querySelectorAll('[data-tab]'),function(b){ var a=(b.getAttribute('data-tab')===S.activeTab);
+      b.setAttribute('aria-selected',a?'true':'false'); b.style.borderBottom=a?'2px solid var(--navy)':'2px solid transparent'; b.style.fontWeight=a?'700':'500'; b.style.color=a?'var(--navy)':'var(--sub)'; });
+    document.getElementById('notice-panel').innerHTML=noticePanelHtml(); return; }
+  if(t.hasAttribute('data-zone')){ gotoTab(t.getAttribute('data-zone')); return; }
+  if(t.hasAttribute('data-calctab')){ gotoTab(t.getAttribute('data-calctab')); return; }
+  if(t.hasAttribute('data-filter')){ S.cs.filterTag=t.getAttribute('data-filter');
+    document.getElementById('cs-filters').innerHTML=casesFilterHtml(); updateCasesList(); return; }
+  if(t.hasAttribute('data-select')){ S.cs.selectedId=+t.getAttribute('data-select');
+    updateCasesList(); updateCasesDetail(); return; }
+});
+
+/* ============================================================
+   LIVE DATA (gviz) with snapshot fallback
+   ============================================================ */
+function parseGviz(text){
+  var start=text.indexOf('{'), end=text.lastIndexOf('}');
+  if(start<0||end<0) return null;
+  var obj=JSON.parse(text.slice(start,end+1));
+  var tbl=obj.table; if(!tbl) return null;
+  var rows=(tbl.rows||[]).map(function(r){ return (r.c||[]).map(function(cell){ return cell&&cell.v!=null?String(cell.v):''; }); });
+  var labels=(tbl.cols||[]).map(function(col){ return (col.label||'').trim(); });
+  /* locate header row (blank first row in sheet) */
+  var headerIdx=-1;
+  for(var i=0;i<rows.length;i++){ if((rows[i][0]||'').trim()==='ID'){ headerIdx=i; break; } }
+  var header, dataRows;
+  if(headerIdx>=0){ header=rows[headerIdx].map(function(s){return s.trim();}); dataRows=rows.slice(headerIdx+1); }
+  else { header=labels; dataRows=rows; }
+  function col(name){ return header.indexOf(name); }
+  var iId=col('ID'), iSearch=col('검색 태그'), iMedia=col('매체 태그'), iQ=col('질의 요지'), iA=col('회답 요지'), iDq=col('질의 문서번호'), iDa=col('회답 문서번호'), iLaw=col('관련 법조항');
+  if(iId<0||iQ<0||iA<0) return null;
+  var out=[];
+  dataRows.forEach(function(row){
+    var idRaw=(row[iId]||'').trim(); if(!idRaw) return;
+    var id=parseInt(idRaw,10); if(isNaN(id)) return;
+    var splitTags=function(x){ return (x||'').split(',').map(function(s){return s.trim();}).filter(Boolean); };
+    out.push({
+      id:id,
+      searchTags:splitTags(row[iSearch]),
+      tags:splitTags(row[iMedia]),
+      question:(row[iQ]||'').trim(),
+      answer:(row[iA]||'').trim(),
+      docQ:iDq>=0?(row[iDq]||'').trim():'',
+      docA:iDa>=0?(row[iDa]||'').trim():'',
+      law:iLaw>=0?(row[iLaw]||'').trim():''
+    });
+  });
+  return out.length?out:null;
+}
+function loadLive(){
+  var url='https://docs.google.com/spreadsheets/d/'+CONFIG.sheetId+'/gviz/tq?tqx=out:json';
+  fetch(url).then(function(res){ return res.text(); }).then(function(text){
+    var parsed=parseGviz(text);
+    if(parsed && parsed.length){
+      CASES=parsed;
+      if(!caseById(S.cs.selectedId)) S.cs.selectedId=CASES[0].id;
+      /* refresh only non-input regions to preserve focus/caret */
+      if(S.view==='home'){ if(document.getElementById('home-results')) updateHome(); }
+      else if(S.view==='cases'){ if(document.getElementById('cs-rows')){ updateCasesList(); updateCasesDetail(); } }
     }
-    <div class="disclaimer">
-      <strong>주의사항</strong> &nbsp;이 결과는 참고용이며 법적 효력이 없습니다. 행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있습니다. 최종 판단은 <strong>경기도선거관리위원회(031-259-4876)</strong>로 문의하세요.
-    </div>
-    <div class="result-actions">
-      <button class="btn btn-primary" onclick="showTree()">다시 찾기</button>
-      <button class="btn btn-outline" onclick="showHome()">홈으로</button>
-    </div>`;
+  }).catch(function(){ /* keep snapshot */ });
 }
 
-function toggleRCase(id) {
-  const el = document.getElementById('rc-' + id);
-  const isOpen = el.classList.contains('open');
-  document.querySelectorAll('#result-content .case-item.open').forEach(e => e.classList.remove('open'));
-  if (!isOpen) el.classList.add('open');
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+  document.getElementById('app').innerHTML=renderShell();
+  var m=(location.hash||'').match(/#case-(\d+)/);
+  if(m){ var id=+m[1]; if(caseById(id).id===id){ S.view='cases'; S.cs.selectedId=id; } }
+  renderView();
+  loadLive();
+  window.addEventListener('hashchange',function(){
+    var mm=(location.hash||'').match(/#case-(\d+)/);
+    if(mm){ var i=+mm[1]; S.view='cases'; S.cs.selectedId=i; renderView(); }
+  });
 }
+init();
 
-// 초기 화면 설정
-document.getElementById('screen-tree').style.display = 'none';
-document.getElementById('screen-result').style.display = 'none';
-document.getElementById('screen-home').style.display = 'block';
-loadCasesFromSheet();
+})();
 </script>
 </body>
 </html>
