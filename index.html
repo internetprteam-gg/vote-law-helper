@@ -79,7 +79,8 @@ var CONFIG = {
   /* ↓ 데이터 기준일 — 시트 업데이트 후 이 날짜를 직접 수정하세요 (형식 예: '2026. 7. 7.') */
   dataDate: '2026. 3. 18.',
   sheetId: '19xSoIFRxA8HgRVKIitxp6MuRk_Gax_T85YtAz9FQGiQ',
-  reportPostUrl: 'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec',
+  reportPostUrl: 'https://script.google.com/macros/s/AKfycbxOTlDOKAxj81kSjJCiNXHUo22yLQ4ioLICF9h6-GqMd-N3htvVMiNJ7ieGc8fDa5r_/exec',
+  casePostUrl:   'https://script.google.com/macros/s/AKfycbzok15IxMNHuXVCSxzb-AOwLkogZr4O_LL2fX5_ju6uG4Un7hfhXX_qfQfxHd9H9A2pWw/exec',
   adminTokenHash: 'd7ffafa45b1f68c8dfc79b09880cafcedf30895a9e429fa1389b6d50fccc451d'
 };
 var PHONE = '031-259-4876';
@@ -437,29 +438,26 @@ function adminReportsHtml(){
 
 function loadAdminReports(){
   S.adminReports='loading'; renderAdmin();
-  var done=false;
-  var ac=(typeof AbortController!=='undefined')?new AbortController():null;
+  var cbName='_gasCb'+Date.now();
+  var sc=null;
   var timer=setTimeout(function(){
-    if(done)return; done=true; if(ac)ac.abort();
-    S.adminReports='error:timeout'; renderAdmin();
+    cleanup(); S.adminReports='error:timeout'; renderAdmin();
   },15000);
-  var opt={cache:'no-store'}; if(ac) opt.signal=ac.signal;
-  fetch(CONFIG.reportPostUrl+'?token='+encodeURIComponent(String(S.adminAuth||'')),opt)
-    .then(function(res){return res.text();})
-    .then(function(text){
-      if(done)return; done=true; clearTimeout(timer);
-      var data;
-      try { data=JSON.parse(text); } catch(e){ S.adminReports='error:json_parse — '+text.slice(0,120); renderAdmin(); return; }
-      if(data&&data.ok&&data.rows){ S.adminReports=data.rows; }
-      else { S.adminReports='error:'+(data&&data.error?data.error:'unknown')+' — HTTP OK'; }
-      renderAdmin();
-    })
-    .catch(function(e){
-      if(done)return; done=true; clearTimeout(timer);
-      var msg=(e&&e.name==='AbortError')?'timeout':(e&&e.message)||'network_error';
-      console.error('[제보목록]',msg,e);
-      S.adminReports='error:'+msg; renderAdmin();
-    });
+  function cleanup(){
+    clearTimeout(timer);
+    try{ if(sc&&sc.parentNode) sc.parentNode.removeChild(sc); }catch(e){}
+    delete window[cbName];
+  }
+  window[cbName]=function(data){
+    cleanup();
+    if(data&&data.ok&&Array.isArray(data.rows)){ S.adminReports=data.rows; }
+    else{ S.adminReports='error:'+(data&&data.error?data.error:'unknown'); }
+    renderAdmin();
+  };
+  sc=document.createElement('script');
+  sc.src=CONFIG.reportPostUrl+'?token='+encodeURIComponent(String(S.adminAuth||''))+'&callback='+cbName;
+  sc.onerror=function(){ cleanup(); S.adminReports='error:script_load_failed'; renderAdmin(); };
+  document.head.appendChild(sc);
 }
 
 function promoteReport(idx){
