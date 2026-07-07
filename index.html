@@ -400,10 +400,17 @@ function adminReportsHtml(){
   if(S.adminReports==='loading'){
     return '<div style="padding:32px;text-align:center;color:var(--muted);font-size:14px">불러오는 중…</div>';
   }
-  if(S.adminReports==='error'){
+  if(typeof S.adminReports==='string'&&S.adminReports.indexOf('error')===0){
+    var detail=S.adminReports.slice(6);
+    var hint;
+    if(detail.indexOf('unauthorized')>=0) hint='토큰 불일치 — GAS ADMIN_TOKEN과 입력한 토큰을 확인하세요.';
+    else if(detail.indexOf('timeout')>=0) hint='GAS 응답 15초 초과.';
+    else if(detail.indexOf('json_parse')>=0) hint='JSON 파싱 실패 (GAS가 HTML 반환 중일 수 있음): '+detail.slice(11);
+    else if(detail.indexOf('Failed to fetch')>=0||detail.indexOf('network')>=0) hint='네트워크 오류 — CORS 또는 GAS 배포 URL 확인.';
+    else hint=detail;
     return '<div style="padding:16px 20px;border-radius:10px;background:var(--no-bg);border:1px solid var(--no-bd);color:var(--no-t);font-size:14px">'+
-      '불러오기 실패. URL 또는 토큰 설정을 확인하세요.'+
-      ' <button data-load-reports="1" style="margin-left:8px;height:30px;padding:0 12px;border:none;border-radius:7px;background:var(--no-t);color:#fff;font-size:13px;cursor:pointer">다시 시도</button>'+
+      '<strong>불러오기 실패</strong><br><span style="font-size:13px;word-break:break-all">'+esc(hint)+'</span>'+
+      ' <button data-load-reports="1" style="margin-top:8px;display:block;height:30px;padding:0 12px;border:none;border-radius:7px;background:var(--no-t);color:#fff;font-size:13px;cursor:pointer">다시 시도</button>'+
     '</div>';
   }
   if(!S.adminReports.length){
@@ -434,19 +441,24 @@ function loadAdminReports(){
   var ac=(typeof AbortController!=='undefined')?new AbortController():null;
   var timer=setTimeout(function(){
     if(done)return; done=true; if(ac)ac.abort();
-    S.adminReports='error'; renderAdmin();
+    S.adminReports='error:timeout'; renderAdmin();
   },15000);
   var opt={cache:'no-store'}; if(ac) opt.signal=ac.signal;
   fetch(CONFIG.reportPostUrl+'?token='+encodeURIComponent(String(S.adminAuth||'')),opt)
-    .then(function(res){return res.json();})
-    .then(function(data){
+    .then(function(res){return res.text();})
+    .then(function(text){
       if(done)return; done=true; clearTimeout(timer);
-      S.adminReports=(data&&data.ok&&data.rows)?data.rows:'error';
+      var data;
+      try { data=JSON.parse(text); } catch(e){ S.adminReports='error:json_parse — '+text.slice(0,120); renderAdmin(); return; }
+      if(data&&data.ok&&data.rows){ S.adminReports=data.rows; }
+      else { S.adminReports='error:'+(data&&data.error?data.error:'unknown')+' — HTTP OK'; }
       renderAdmin();
     })
-    .catch(function(){
+    .catch(function(e){
       if(done)return; done=true; clearTimeout(timer);
-      S.adminReports='error'; renderAdmin();
+      var msg=(e&&e.name==='AbortError')?'timeout':(e&&e.message)||'network_error';
+      console.error('[제보목록]',msg,e);
+      S.adminReports='error:'+msg; renderAdmin();
     });
 }
 
