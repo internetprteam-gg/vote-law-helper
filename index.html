@@ -260,13 +260,13 @@ function noticePanelHtml(){
     var noItems = block.no.map(function(it){ return '<li style="display:flex;gap:10px;padding:12px 14px;border-top:1px solid var(--line-soft);font-size:15px;line-height:1.65"><span aria-hidden="true" style="flex:none;color:var(--no-t);font-weight:700">✕</span><span>'+esc(it)+'</span></li>'; }).join('');
     return '<div>'+head+note+
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">'+
-        '<div style="border:1px solid var(--ok-bd);border-radius:12px;overflow:hidden">'+
+        '<div style="border:1px solid var(--ok-bd);border-radius:12px;overflow:hidden;background:var(--surface)">'+
           '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--ok-bg);border-bottom:1px solid var(--ok-bd)"><span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;background:var(--ok-t);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✓</span><span style="font-size:15px;font-weight:700;color:var(--ok-t)">가능</span></div>'+
-          '<ul style="list-style:none;margin:0;padding:0">'+okItems+'</ul>'+
+          '<ul style="list-style:none;margin:0;padding:0;background:var(--surface)">'+okItems+'</ul>'+
         '</div>'+
-        '<div style="border:1px solid var(--no-bd);border-radius:12px;overflow:hidden">'+
+        '<div style="border:1px solid var(--no-bd);border-radius:12px;overflow:hidden;background:var(--surface)">'+
           '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--no-bg);border-bottom:1px solid var(--no-bd)"><span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;background:var(--no-t);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✕</span><span style="font-size:15px;font-weight:700;color:var(--no-t)">불가</span></div>'+
-          '<ul style="list-style:none;margin:0;padding:0">'+noItems+'</ul>'+
+          '<ul style="list-style:none;margin:0;padding:0;background:var(--surface)">'+noItems+'</ul>'+
         '</div>'+
       '</div>'+
     '</div>';
@@ -437,7 +437,7 @@ function casesFilterHtml(){
 function renderCases(){
   var count=filteredCases(S.cs.q,S.cs.filterTag).length;
   document.getElementById('view').innerHTML =
-  '<div style="width:420px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--surface)">'+
+  '<div style="width:520px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--surface)">'+
     '<div style="padding:16px 18px;border-bottom:1px solid var(--line)">'+
       '<div style="display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px">'+
         '<span aria-hidden="true" style="color:var(--muted);font-size:16px">⌕</span>'+
