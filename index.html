@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 콘텐츠 보안 정책(CSP): 외부 리소스를 구글 시트/GAS·Pretendard CDN으로만 제한 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'unsafe-inline' https://cdn.jsdelivr.net; font-src https://cdn.jsdelivr.net; img-src 'self' data:; connect-src https://docs.google.com https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'unsafe-inline' https://cdn.jsdelivr.net; font-src https://cdn.jsdelivr.net; img-src 'self' data:; connect-src https://docs.google.com https://script.google.com https://script.googleusercontent.com https://cdn.jsdelivr.net; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>경기도청 홍보업무 선거법 도우미</title>
 <!-- Pretendard 웹폰트. 공급망 무결성(SRI) 적용을 권장합니다.
@@ -251,32 +251,30 @@ function showAdminPin(){
     if(!token){errEl.textContent='토큰을 입력하세요.';return;}
     /* 입력 잠금 후 GAS에서 서버 측 검증 */
     inp.disabled=true; okBtn.disabled=true; okBtn.textContent='확인 중…'; errEl.textContent='';
-    var cb='__av'+Date.now(), sid='avs'+Date.now(), done=false;
-    window[cb]=function(data){
-      if(done)return; done=true; clearTimeout(timer);
-      delete window[cb]; var sc=document.getElementById(sid); if(sc)sc.remove();
-      if(data&&data.ok){
-        /* 토큰을 소스가 아닌 메모리(S.adminAuth)에만 보관 */
-        S.adminAuth=token; ov.remove(); setView('admin');
-      } else {
-        inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
-        errEl.textContent='토큰이 올바르지 않습니다.'; inp.select();
-      }
-    };
-    var sc=document.createElement('script'); sc.id=sid;
-    sc.onerror=function(){
-      if(done)return; done=true; clearTimeout(timer); delete window[cb];
-      inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
-      errEl.textContent='서버 연결에 실패했습니다. 잠시 후 다시 시도하세요.';
-    };
+    var done=false;
+    var ac=(typeof AbortController!=='undefined')?new AbortController():null;
     var timer=setTimeout(function(){
-      if(done)return; done=true; delete window[cb];
-      var el=document.getElementById(sid); if(el)el.remove();
+      if(done)return; done=true; if(ac)ac.abort();
       inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
       errEl.textContent='응답 시간 초과. 다시 시도하세요.';
     },10000);
-    sc.src=CONFIG.reportPostUrl+'?callback='+cb+'&token='+encodeURIComponent(token);
-    document.body.appendChild(sc);
+    var opt={cache:'no-store'}; if(ac) opt.signal=ac.signal;
+    fetch(CONFIG.reportPostUrl+'?token='+encodeURIComponent(token),opt)
+      .then(function(res){return res.json();})
+      .then(function(data){
+        if(done)return; done=true; clearTimeout(timer);
+        if(data&&data.ok){
+          S.adminAuth=token; ov.remove(); setView('admin');
+        } else {
+          inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
+          errEl.textContent='토큰이 올바르지 않습니다.'; inp.select();
+        }
+      })
+      .catch(function(){
+        if(done)return; done=true; clearTimeout(timer);
+        inp.disabled=false; okBtn.disabled=false; okBtn.textContent='확인';
+        errEl.textContent='서버 연결에 실패했습니다. 잠시 후 다시 시도하세요.';
+      });
   }
   okBtn.addEventListener('click',tryToken);
   inp.addEventListener('keydown',function(ev){if(ev.key==='Enter')tryToken();});
@@ -412,19 +410,24 @@ function adminReportsHtml(){
 
 function loadAdminReports(){
   S.adminReports='loading'; renderAdmin();
-  var cb='__arCb'+Date.now();
-  var sid='arsc'+Date.now();
-  window[cb]=function(data){
-    delete window[cb];
-    var el=document.getElementById(sid); if(el) el.remove();
-    S.adminReports=(data&&data.rows)?data.rows:'error';
-    renderAdmin();
-  };
-  var s=document.createElement('script');
-  s.id=sid;
-  s.onerror=function(){delete window[cb]; S.adminReports='error'; renderAdmin();};
-  s.src=CONFIG.reportPostUrl+'?callback='+cb+'&token='+encodeURIComponent(String(S.adminAuth||''));
-  document.body.appendChild(s);
+  var done=false;
+  var ac=(typeof AbortController!=='undefined')?new AbortController():null;
+  var timer=setTimeout(function(){
+    if(done)return; done=true; if(ac)ac.abort();
+    S.adminReports='error'; renderAdmin();
+  },15000);
+  var opt={cache:'no-store'}; if(ac) opt.signal=ac.signal;
+  fetch(CONFIG.reportPostUrl+'?token='+encodeURIComponent(String(S.adminAuth||'')),opt)
+    .then(function(res){return res.json();})
+    .then(function(data){
+      if(done)return; done=true; clearTimeout(timer);
+      S.adminReports=(data&&data.ok&&data.rows)?data.rows:'error';
+      renderAdmin();
+    })
+    .catch(function(){
+      if(done)return; done=true; clearTimeout(timer);
+      S.adminReports='error'; renderAdmin();
+    });
 }
 
 function promoteReport(idx){
