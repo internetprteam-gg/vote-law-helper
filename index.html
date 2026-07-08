@@ -948,65 +948,42 @@ document.getElementById('app').addEventListener('click',function(e){
 /* ============================================================
    LIVE DATA (gviz) with snapshot fallback
    ============================================================ */
-function parseGviz(text){
-  var start=text.indexOf('{'), end=text.lastIndexOf('}');
-  if(start<0||end<0) return null;
-  var obj=JSON.parse(text.slice(start,end+1));
-  var tbl=obj.table; if(!tbl) return null;
-  var rows=(tbl.rows||[]).map(function(r){ return (r.c||[]).map(function(cell){ return cell&&cell.v!=null?String(cell.v):''; }); });
-  var labels=(tbl.cols||[]).map(function(col){ return (col.label||'').trim(); });
-  /* locate header row (blank first row in sheet) */
-  var headerIdx=-1;
-  for(var i=0;i<rows.length;i++){ if((rows[i][0]||'').trim()==='ID'){ headerIdx=i; break; } }
-  var header, dataRows;
-  if(headerIdx>=0){ header=rows[headerIdx].map(function(s){return s.trim();}); dataRows=rows.slice(headerIdx+1); }
-  else { header=labels; dataRows=rows; }
-  function col(name){ return header.indexOf(name); }
-  var iId=col('ID'), iSearch=col('검색 태그'), iMedia=col('매체 태그'), iQ=col('질의 요지'), iA=col('회답 요지'), iDq=col('질의 문서번호'), iDa=col('회답 문서번호'), iLaw=col('관련 법조항');
-  if(iId<0||iQ<0||iA<0) return null;
-  var out=[];
-  dataRows.forEach(function(row){
-    var idRaw=(row[iId]||'').trim(); if(!idRaw) return;
-    var id=parseInt(idRaw,10); if(isNaN(id)) return;
-    var splitTags=function(x){ return (x||'').split(',').map(function(s){return s.trim();}).filter(Boolean); };
-    out.push({
-      id:id,
-      searchTags:splitTags(row[iSearch]),
-      tags:splitTags(row[iMedia]),
-      question:(row[iQ]||'').trim(),
-      answer:(row[iA]||'').trim(),
-      docQ:iDq>=0?(row[iDq]||'').trim():'',
-      docA:iDa>=0?(row[iDa]||'').trim():'',
-      law:iLaw>=0?(row[iLaw]||'').trim():''
-    });
-  });
-  return out.length?out:null;
-}
 function loadLive(){
-  /* 캐시 우회: 매 로드마다 다른 쿼리(_cb)를 붙이고 no-store 로 강제 최신 요청 */
-  var url='https://docs.google.com/spreadsheets/d/'+CONFIG.sheetId+'/gviz/tq?tqx=out:json&_cb='+Date.now();
-  fetch(url,{cache:'no-store'}).then(function(res){
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    return res.text();
-  }).then(function(text){
-    var parsed=parseGviz(text);
-    if(parsed && parsed.length){
-      CASES=parsed;
+  var cbName='_liveGasCb'+Date.now();
+  var sc=null;
+  var timer=setTimeout(function(){
+    cleanup(); LOAD_STATE='error';
+    console.error('[선거법도우미] 시트 로드 타임아웃');
+    if(S.view==='home'||S.view==='cases') renderDbError();
+  },15000);
+  function cleanup(){
+    clearTimeout(timer);
+    try{ if(sc&&sc.parentNode) sc.parentNode.removeChild(sc); }catch(e){}
+    delete window[cbName];
+  }
+  window[cbName]=function(data){
+    cleanup();
+    if(Array.isArray(data)&&data.length){
+      CASES=data;
       LOAD_STATE='ok';
       console.log('[선거법도우미] 시트 로드 성공 · '+CASES.length+'건');
-      if(CASES.length && !caseById(S.cs.selectedId)) S.cs.selectedId=CASES[0].id;
+      if(CASES.length&&!caseById(S.cs.selectedId)) S.cs.selectedId=CASES[0].id;
       if(S.view==='home') renderHome();
       else if(S.view==='cases'){ if(document.getElementById('cs-rows')){ updateCasesList(); updateCasesDetail(); } else renderCases(); }
     } else {
       LOAD_STATE='error';
-      console.error('[선거법도우미] 시트 파싱 실패 — 헤더 행(ID 열) 또는 공개 설정을 확인하세요.');
+      console.error('[선거법도우미] 시트 로드 실패 — GAS 응답이 비어 있습니다.');
       if(S.view==='home'||S.view==='cases') renderDbError();
     }
-  }).catch(function(err){
-    LOAD_STATE='error';
-    console.error('[선거법도우미] 시트 로드 실패:', err&&err.message?err.message:err);
+  };
+  sc=document.createElement('script');
+  sc.src=CONFIG.casePostUrl+'?callback='+cbName;
+  sc.onerror=function(){
+    cleanup(); LOAD_STATE='error';
+    console.error('[선거법도우미] 시트 로드 실패 — GAS 스크립트 로드 오류');
     if(S.view==='home'||S.view==='cases') renderDbError();
-  });
+  };
+  document.head.appendChild(sc);
 }
 
 /* ============================================================
