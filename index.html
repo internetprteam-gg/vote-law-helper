@@ -132,7 +132,7 @@ var S = {
   copiedKey: null,
   adminAuth: '',  /* 빈 문자열=미인증, 비빈문자열=세션 내 메모리에만 보관되는 토큰 */
   adminTab: 'add',
-  adminForm: {id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:''},
+  adminForm: {id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:'',refUrl:''},
   adminFormStatus: 'idle',
   adminReports: null
 };
@@ -166,7 +166,7 @@ function segColors(key){
   return {bg:'var(--bg)',bd:'var(--line)',tx:'var(--sub)',icon:'·'};
 }
 function ddayText(){ var d=days(); return d>0?'D-'+d:(d===0?'D-DAY':'D+'+(-d)); }
-function core(c){ return {id:c.id,question:c.question,answer:c.answer,law:c.law,docQ:c.docQ,docA:c.docA,tags:c.tags||[],tagText:(c.tags||[]).join(' · ')}; }
+function core(c){ return {id:c.id,question:c.question,answer:c.answer,law:c.law,docQ:c.docQ,docA:c.docA,refUrl:c.refUrl||'',tags:c.tags||[],tagText:(c.tags||[]).join(' · ')}; }
 
 /* highlight query matches inside text, returning escaped HTML */
 function hl(text,q){
@@ -350,6 +350,7 @@ function adminAddHtml(){
         '<input id="af-docQ" value="'+esc(f.docQ)+'" placeholder="질의 문서번호" style="'+fs+'">'+
         '<input id="af-docA" value="'+esc(f.docA)+'" placeholder="회답 문서번호" style="'+fs+'">'+
         '<input id="af-law" value="'+esc(f.law)+'" placeholder="관련 법조항" style="'+fs+'">'+
+        '<input id="af-refUrl" value="'+esc(f.refUrl)+'" placeholder="참고 링크 URL (선택)" style="'+fs+'">'+
       '</div>'+
       (st==='error'?'<div style="font-size:14px;color:var(--no-t);padding:10px 12px;background:var(--no-bg);border:1px solid var(--no-bd);border-radius:8px">전송 실패. GAS 설정(CONFIG.reportPostUrl)을 확인하거나 시트에 직접 입력하세요.</div>':'')+
       (st==='missing'?'<div style="font-size:14px;color:var(--no-t)">ID, 질의 요지, 회답 요지는 필수입니다.</div>':'')+
@@ -359,7 +360,7 @@ function adminAddHtml(){
 }
 
 function bindAdminAdd(){
-  var map={id:'af-id',tags:'af-tags',searchTags:'af-stags',question:'af-q',answer:'af-a',docQ:'af-docQ',docA:'af-docA',law:'af-law'};
+  var map={id:'af-id',tags:'af-tags',searchTags:'af-stags',question:'af-q',answer:'af-a',docQ:'af-docQ',docA:'af-docA',law:'af-law',refUrl:'af-refUrl'};
   var keys=Object.keys(map);
   for(var i=0;i<keys.length;i++){ (function(k){
     var el=document.getElementById(map[k]); if(el) el.addEventListener('input',function(){S.adminForm[k]=this.value;});
@@ -375,17 +376,17 @@ function submitAdminCase(){
   if(!String(f.id).trim()||!f.question.trim()||!f.answer.trim()){ S.adminFormStatus='missing'; renderAdmin(); return; }
   S.adminFormStatus='sending'; renderAdmin();
   if(!CONFIG.reportPostUrl){
-    setTimeout(function(){ S.adminFormStatus='success'; S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:''}; renderAdmin(); loadLive(); },800);
+    setTimeout(function(){ S.adminFormStatus='success'; S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:'',refUrl:''}; renderAdmin(); loadLive(); },800);
     return;
   }
-  var payload={type:'addCase',token:String(S.adminAuth||''),id:parseInt(f.id,10)||0,tags:f.tags,searchTags:f.searchTags,question:f.question,answer:f.answer,docQ:f.docQ,docA:f.docA,law:f.law};
+  var payload={type:'addCase',token:String(S.adminAuth||''),id:parseInt(f.id,10)||0,tags:f.tags,searchTags:f.searchTags,question:f.question,answer:f.answer,docQ:f.docQ,docA:f.docA,law:f.law,refUrl:f.refUrl||''};
   var done=false;
   var ac=(typeof AbortController!=='undefined')?new AbortController():null;
   var timer=setTimeout(function(){if(done)return;done=true;if(ac)ac.abort();S.adminFormStatus='error';renderAdmin();},15000);
   var opt={method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(JSON.stringify(payload))};
   if(ac) opt.signal=ac.signal;
   fetch(CONFIG.reportPostUrl,opt)
-    .then(function(){if(done)return;done=true;clearTimeout(timer);S.adminFormStatus='success';S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:''};renderAdmin();loadLive();})
+    .then(function(){if(done)return;done=true;clearTimeout(timer);S.adminFormStatus='success';S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:'',refUrl:''};renderAdmin();loadLive();})
     .catch(function(){if(done)return;done=true;clearTimeout(timer);S.adminFormStatus='error';renderAdmin();});
 }
 
@@ -707,9 +708,10 @@ function casesDetailHtml(){
         '<div><div style="font-size:12px;color:var(--muted);margin-bottom:3px">관련 법조항</div><div style="font-size:15px;font-weight:600">'+esc(c.law)+' <a href="https://www.law.go.kr" target="_blank" rel="noopener" title="외부망에서만 열립니다" style="font-size:13px;font-weight:500">법령정보센터 ↗</a></div></div>'+
         '<div><div style="font-size:12px;color:var(--muted);margin-bottom:3px">질의 / 회답 문서번호</div><div style="font-size:14px;font-weight:600;font-family:var(--mono)">'+esc(c.docQ)+' / '+esc(c.docA)+'</div></div>'+
       '</div>'+
-      '<div style="display:flex;gap:8px;margin-top:22px" class="no-print">'+
+      '<div style="display:flex;gap:8px;margin-top:22px;flex-wrap:wrap" class="no-print">'+
         '<button id="detail-copy" style="height:40px;padding:0 16px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:14px;font-weight:600;cursor:pointer">'+copyLabel+'</button>'+
         '<button id="detail-copylink" style="height:40px;padding:0 16px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer">'+linkLabel+'</button>'+
+        (co.refUrl?'<a href="'+esc(co.refUrl)+'" target="_blank" rel="noopener noreferrer" style="height:40px;padding:0 16px;border:1px solid var(--navy);border-radius:8px;background:#fff;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px">참고 자료 ↗</a>':'')+
       '</div>'+
     '</div>'+
     '<div style="margin-top:16px;padding:12px 16px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);font-size:13px;line-height:1.65">이 결과는 참고용이며 법적 효력이 없습니다. 행위의 주체·시기·목적·방법·대상 등 구체적 양태에 따라 판단이 달라질 수 있습니다. 최종 판단은 경기도선거관리위원회('+PHONE+')로 문의하세요.</div>'+
@@ -940,7 +942,7 @@ document.getElementById('app').addEventListener('click',function(e){
   if(t.hasAttribute('data-retry-load')){ LOAD_STATE='loading'; if(S.view==='home')renderHome(); else if(S.view==='cases')renderCases(); loadLive(); return; }
   if(t.hasAttribute('data-load-reports')){ loadAdminReports(); return; }
   if(t.hasAttribute('data-promote')){ promoteReport(+t.getAttribute('data-promote')); return; }
-  if(t.hasAttribute('data-admin-add-more')){ S.adminFormStatus='idle'; S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:''}; renderAdmin(); return; }
+  if(t.hasAttribute('data-admin-add-more')){ S.adminFormStatus='idle'; S.adminForm={id:'',tags:'',searchTags:'',question:'',answer:'',docQ:'',docA:'',law:'',refUrl:''}; renderAdmin(); return; }
 });
 
 /* ============================================================
