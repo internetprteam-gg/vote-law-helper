@@ -594,7 +594,10 @@ function renderHome(){
           '</div>'+
           '<div style="min-width:260px;flex:1;max-width:360px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px">'+
             '<div style="font-size:14px;font-weight:600;margin-bottom:8px">행사일 계산기</div>'+
-            '<input id="calc-input" type="date" value="'+esc(S.calcInput)+'" aria-label="행사 예정일" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;background:#fff;color:var(--ink)">'+
+            '<div style="position:relative">'+
+              '<input id="calc-input" type="date" value="'+esc(S.calcInput)+'" aria-label="행사 예정일" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;background:#fff;color:var(--ink);box-sizing:border-box">'+
+              (S.calcInput?'':'<div id="calc-ph" style="position:absolute;inset:0;display:flex;align-items:center;padding:0 12px;font-size:15px;color:var(--muted);pointer-events:none">날짜를 탭하여 선택하세요</div>')+
+            '</div>'+
             '<div id="calc-result"></div>'+
             '<div style="margin-top:10px;font-size:13px;color:var(--muted)">예정일을 넣으면 제한 구간을 판정합니다.</div>'+
           '</div>'+
@@ -651,7 +654,7 @@ function renderHome(){
   hq.addEventListener('input',function(){ S.homeQ=this.value; updateHome(); });
   var hc=document.getElementById('home-clear'); if(hc) hc.addEventListener('click',function(){ S.homeQ=''; renderHome(); document.getElementById('home-q').focus(); });
   var ci=document.getElementById('calc-input');
-  ci.addEventListener('input',function(){ S.calcInput=this.value; updateCalcResult(); });
+  ci.addEventListener('input',function(){ S.calcInput=this.value; updateCalcResult(); var ph=document.getElementById('calc-ph'); if(ph) ph.style.display=this.value?'none':'flex'; });
   document.getElementById('notice-print').addEventListener('click',function(){ window.print(); });
 }
 function updateHome(){
@@ -794,7 +797,7 @@ function renderReport(){
   var invalid=(S.reportStatus==='invalid');
   var failed=(S.reportStatus==='failed');
   var sending=(S.reportStatus==='sending');
-  var btnLabel=sending?'보내는 중…':'제보 보내기';
+  var btnLabel=sending?'보내는 중…':'제출하기';
   var btnBg=sending?'var(--muted)':'var(--navy)';
   var body;
   if(done){
@@ -809,18 +812,18 @@ function renderReport(){
         '<input data-rf="date" value="'+esc(S.r.date)+'" placeholder="회답 일자·문서번호 (선택)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
         '<input data-rf="law" value="'+esc(S.r.law)+'" placeholder="관련 법조항 (선택)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
       '</div>'+
-      '<input data-rf="contact" value="'+esc(S.r.contact)+'" placeholder="제보자 소속·연락처 (선택 — 검수 시 확인용)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
+      '<input data-rf="contact" value="'+esc(S.r.contact)+'" placeholder="소속·연락처 (선택 — 검수 시 확인용)" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:15px">'+
       '<input data-rf="hp" value="'+esc(S.r.hp)+'" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">'+
       (invalid?'<div style="font-size:14px;color:var(--no-t)">질의 요지와 선관위 회답 내용은 필수입니다.</div>':'')+
       (failed?'<div style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-t);font-size:14px"><span aria-hidden="true" style="font-weight:700">⚠</span><span>전송하지 못했습니다. 잠시 후 다시 시도하거나 담당자에게 직접 전달해 주세요.</span></div>':'')+
       '<div><button id="report-submit"'+(sending?' disabled':'')+' style="height:44px;padding:0 20px;border:none;border-radius:8px;background:'+btnBg+';color:#fff;font-size:15px;font-weight:600;cursor:pointer">'+btnLabel+'</button></div>'+
-      '<p style="font-size:13px;color:var(--muted);margin:0;line-height:1.6">제보는 사례 시트에 바로 반영되지 않으며, 담당자 검수를 거쳐 반영됩니다.</p>'+
+      '<p style="font-size:13px;color:var(--muted);margin:0;line-height:1.6">추가해주시는 사례는 바로 반영되지 않으며, 담당자 검수를 거쳐 확인 후 반영됩니다.</p>'+
     '</div>';
   }
   document.getElementById('view').innerHTML =
   '<div class="cc-scroll" style="flex:1;overflow-y:auto">'+
     '<div style="max-width:760px;margin:0 auto;padding:24px 32px 72px">'+
-      '<p style="font-size:14px;color:var(--sub);margin:0 0 20px">선관위에서 새 회신을 받으면 제보해 주세요. 제보는 담당자 검수를 거쳐 사례에 반영됩니다.</p>'+
+      '<p style="font-size:14px;color:var(--sub);margin:0 0 20px">선관위에서 새 회신을 받으시면 추가해 주세요. 작성해주신 내용은 담당자 검수를 거쳐 회답 사례에 반영됩니다.</p>'+
       '<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 26px">'+body+'</div>'+
     '</div>'+
   '</div>';
