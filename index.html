@@ -948,23 +948,50 @@ document.getElementById('app').addEventListener('click',function(e){
 /* ============================================================
    LIVE DATA (gviz) with snapshot fallback
    ============================================================ */
+var FIELD_MAP={
+  'ID':'id','검색 태그':'searchTags','매체 태그':'tags',
+  '질의 요지':'question','회답 요지':'answer',
+  '질의 문서번호':'docQ','회답 문서번호':'docA',
+  '관련 법조항':'law','참고 링크':'refUrl'
+};
+function parseGviz(text){
+  var start=text.indexOf('{'), end=text.lastIndexOf('}');
+  if(start<0||end<0) return null;
+  var obj=JSON.parse(text.slice(start,end+1));
+  var tbl=obj.table; if(!tbl) return null;
+  var rows=(tbl.rows||[]).map(function(r){ return (r.c||[]).map(function(cell){ return cell&&cell.v!=null?String(cell.v):''; }); });
+  var labels=(tbl.cols||[]).map(function(col){ return (col.label||'').trim(); });
+  var headerIdx=-1;
+  for(var i=0;i<rows.length;i++){ if((rows[i][0]||'').trim()==='ID'){ headerIdx=i; break; } }
+  var header=headerIdx>=0?rows[headerIdx].map(function(s){return s.trim();}):labels;
+  var dataRows=headerIdx>=0?rows.slice(headerIdx+1):rows;
+  var iId=header.indexOf('ID');
+  if(iId<0) return null;
+  var out=[];
+  dataRows.forEach(function(row){
+    var idRaw=(row[iId]||'').trim(); if(!idRaw) return;
+    var id=parseInt(idRaw,10); if(isNaN(id)) return;
+    var obj={};
+    header.forEach(function(h,i){
+      var key=FIELD_MAP[h]; if(!key) return;
+      var val=(row[i]||'').trim();
+      obj[key]=(key==='tags'||key==='searchTags')?val.split(',').map(function(s){return s.trim();}).filter(Boolean):val;
+    });
+    obj.id=id;
+    if(!obj.question||!obj.answer) return;
+    out.push(obj);
+  });
+  return out.length?out:null;
+}
 function loadLive(){
-  var cbName='_liveGasCb'+Date.now();
-  var sc=null;
-  var timer=setTimeout(function(){
-    cleanup(); LOAD_STATE='error';
-    console.error('[선거법도우미] 시트 로드 타임아웃');
-    if(S.view==='home'||S.view==='cases') renderDbError();
-  },15000);
-  function cleanup(){
-    clearTimeout(timer);
-    try{ if(sc&&sc.parentNode) sc.parentNode.removeChild(sc); }catch(e){}
-    delete window[cbName];
-  }
-  window[cbName]=function(data){
-    cleanup();
-    if(Array.isArray(data)&&data.length){
-      CASES=data;
+  var url='https://docs.google.com/spreadsheets/d/'+CONFIG.sheetId+'/gviz/tq?tqx=out:json&_cb='+Date.now();
+  fetch(url,{cache:'no-store'}).then(function(res){
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return res.text();
+  }).then(function(text){
+    var parsed=parseGviz(text);
+    if(parsed&&parsed.length){
+      CASES=parsed;
       LOAD_STATE='ok';
       console.log('[선거법도우미] 시트 로드 성공 · '+CASES.length+'건');
       if(CASES.length&&!caseById(S.cs.selectedId)) S.cs.selectedId=CASES[0].id;
@@ -972,18 +999,14 @@ function loadLive(){
       else if(S.view==='cases'){ if(document.getElementById('cs-rows')){ updateCasesList(); updateCasesDetail(); } else renderCases(); }
     } else {
       LOAD_STATE='error';
-      console.error('[선거법도우미] 시트 로드 실패 — GAS 응답이 비어 있습니다.');
+      console.error('[선거법도우미] 시트 파싱 실패');
       if(S.view==='home'||S.view==='cases') renderDbError();
     }
-  };
-  sc=document.createElement('script');
-  sc.src=CONFIG.casePostUrl+'?callback='+cbName;
-  sc.onerror=function(){
-    cleanup(); LOAD_STATE='error';
-    console.error('[선거법도우미] 시트 로드 실패 — GAS 스크립트 로드 오류');
+  }).catch(function(err){
+    LOAD_STATE='error';
+    console.error('[선거법도우미] 시트 로드 실패:',err&&err.message?err.message:err);
     if(S.view==='home'||S.view==='cases') renderDbError();
-  };
-  document.head.appendChild(sc);
+  });
 }
 
 /* ============================================================
